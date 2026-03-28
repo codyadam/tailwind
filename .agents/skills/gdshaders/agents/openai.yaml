@@ -1,0 +1,4 @@
+interface:
+  display_name: "GDShaders"
+  short_description: "Godot shader syntax and practical effect recipes"
+  default_prompt: "Author, debug, and port Godot shaders with syntax-correct language rules and practical effect patterns."

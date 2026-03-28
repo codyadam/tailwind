@@ -1,0 +1,19 @@
+PRIVATE USE ONLY LICENSE
+
+Copyright (c) 2026 Private Owner.
+All rights reserved.
+
+This skill is provided only for private/internal use by the authorized owner.
+It is NOT licensed for public distribution, reposting, resale, sublicensing, or
+sharing in whole or in part (including extracted text, references, prompts, or
+derivative copies of this skill package).
+
+This skill includes guidance derived from:
+The Godot Shaders Bible (paid product)
+https://jettelly.com/store/the-godot-shaders-bible
+
+Any leaked or unauthorized copy is unlicensed.
+If you received this file from a public source or other unauthorized channel,
+delete it and obtain the original paid product from the official store URL above.
+
+NO WARRANTY: This material is provided "AS IS", without warranty of any kind.

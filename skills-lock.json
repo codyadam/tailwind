@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "gdshaders": {
+      "source": "mewhhaha/gdshader-skill",
+      "sourceType": "github",
+      "computedHash": "4763cba44395cf2714888dd2c12bec61167c679466209419970e3e4a1dc9b5f5"
+    }
+  }
+}
