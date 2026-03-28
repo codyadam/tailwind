@@ -1,5 +1,5 @@
-# Web export + GitHub Pages. Project root = repo root; only the "Web" preset exists in export_presets.cfg.
-# Enable Pages: Settings → Pages → Build from branch → gh-pages / (root).
+# Web export + GitHub Pages (Actions deployment). Only the "Web" preset exists in export_presets.cfg.
+# Pages: Settings → Pages → Source: GitHub Actions (not a branch).
 # Pin GODOT_VERSION and the container image tag to the same Godot release.
 
 name: godot-ci export
@@ -10,12 +10,16 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 env:
   GODOT_VERSION: 4.6.1
   PROJECT_PATH: .
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   export-web:
@@ -41,18 +45,22 @@ jobs:
           cd "$PROJECT_PATH"
           godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: web
           path: build/web
 
-      - name: Install rsync
-        run: |
-          apt-get update && apt-get install -y rsync
-
+  deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-24.04
+    needs: export-web
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@releases/v4
-        with:
-          branch: gh-pages
-          folder: build/web
+        id: deployment
+        uses: actions/deploy-pages@v5
