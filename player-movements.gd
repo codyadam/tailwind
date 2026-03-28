@@ -81,6 +81,16 @@ func _ready() -> void:
 
 # Order: timers from last slide -> state velocity -> move_and_slide -> wall dash/coyote (is_on_wall / is_on_floor per last move_and_slide)
 func _physics_process(delta: float) -> void:
+	if Input.is_action_just_pressed("game_reset"):
+		global_position = Vector2.ZERO
+		velocity = Vector2.ZERO
+		_state = MoveState.RUN
+		_dash_available = true
+		_dash_timer = 0.0
+		_post_dash_timer = 0.0
+		_coyote_timer = 0.0
+		_jump_buffer_timer = 0.0
+
 	var on_floor := is_on_floor()
 	var gravity := get_gravity()
 
