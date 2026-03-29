@@ -1,0 +1,300 @@
+[gd_scene format=3 uid="uid://ck0qlplukgcot"]
+
+[ext_resource type="Texture2D" uid="uid://br014ieius72j" path="res://assets/placeholder3.png" id="1_m3k4f"]
+[ext_resource type="Script" uid="uid://bi3yttyq37s83" path="res://scripts/demo_change_shader_inputs.gd" id="1_o6sfi"]
+[ext_resource type="Texture2D" uid="uid://do4tokav81teq" path="res://assets/placeholder4.png" id="2_gci61"]
+[ext_resource type="Script" uid="uid://b8e8dsi2fvrry" path="res://scripts/camera_move_mouse.gd" id="2_kgg7h"]
+[ext_resource type="Texture2D" uid="uid://bjchgv44ibc6l" path="res://assets/placeholder.jpg" id="3_7u122"]
+[ext_resource type="Script" uid="uid://ckb06oqj7n7uf" path="res://scripts/sub_viewport_mirror_world.gd" id="3_ofdvu"]
+[ext_resource type="Shader" uid="uid://yjp6rbn4qk28" path="res://shaders/outline-shader.gdshader" id="4_kgg7h"]
+[ext_resource type="Texture2D" uid="uid://bd0bbhtupeg2t" path="res://assets/tilemap.png" id="4_lmiho"]
+[ext_resource type="Texture2D" uid="uid://dahuoyaavip0" path="res://assets/brush.png" id="5_hdxc3"]
+[ext_resource type="Texture2D" uid="uid://ck55cblg6rxoc" path="res://assets/placeholder2.png" id="6_o6sfi"]
+[ext_resource type="Shader" uid="uid://gp1jeye4p8fk" path="res://shaders/test.gdshader" id="8_7u122"]
+[ext_resource type="VideoStream" uid="uid://dce4bgjody5p" path="res://assets/demo-video-vfx.ogv" id="8_wj4up"]
+[ext_resource type="Shader" uid="uid://cuuob08u7m8oi" path="res://shaders/oil-shader.gdshader" id="9_hdxc3"]
+[ext_resource type="Shader" uid="uid://c6bb4cjonetg4" path="res://shaders/kuwahara-shader.gdshader" id="9_lmiho"]
+[ext_resource type="Texture2D" uid="uid://b2x7qj0kylhkh" path="res://assets/platformer4.png" id="12_xqs1w"]
+[ext_resource type="PackedScene" uid="uid://dhlqbj16est0a" path="res://scenes/scene_switcher.tscn" id="14_ojl2q"]
+[ext_resource type="Texture2D" uid="uid://b5ekv4ywkw7nd" path="res://assets/platformer.png" id="16_3u53g"]
+[ext_resource type="Texture2D" uid="uid://dh2dcjx2t2l6l" path="res://assets/platformer2.png" id="17_xqs1w"]
+[ext_resource type="Texture2D" uid="uid://d0vhet6vu3onm" path="res://assets/platformer3.png" id="18_854uo"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ht068"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wj4up"]
+shader = ExtResource("8_7u122")
+shader_parameter/blur_sigma = 2.00000002980238
+shader_parameter/blur_spread = 1.0009999776954999
+shader_parameter/noise_scale = 0.03000000072648
+shader_parameter/noise_offset = Vector2(0, 0)
+shader_parameter/distort_strength = 0.0029999999241
+shader_parameter/canvas_scale = Vector2(1, 1)
+shader_parameter/noise_time_scale = 0.04400000209
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hdxc3"]
+shader = ExtResource("8_7u122")
+shader_parameter/blur_sigma = 0.7000000104308199
+shader_parameter/blur_spread = 2.3409999477438204
+shader_parameter/noise_scale = 0.15400000661648
+shader_parameter/noise_offset = Vector2(0, 0)
+shader_parameter/distort_strength = 0.0019999999494
+shader_parameter/canvas_scale = Vector2(1, 1)
+shader_parameter/noise_time_scale = 0.12400000589
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ojl2q"]
+shader = ExtResource("9_hdxc3")
+shader_parameter/canvas_scale = 0.000611
+shader_parameter/density = 0.08900000422749
+shader_parameter/cell_jitter = 0.999999977648
+shader_parameter/edge_clamp = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o6sfi"]
+shader = ExtResource("9_lmiho")
+shader_parameter/kernel_spread = 2.0009999553435
+shader_parameter/canvas_scale = Vector2(1, 1)
+shader_parameter/radius = 3
+shader_parameter/edge_clamp = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6bopi"]
+shader = ExtResource("9_lmiho")
+shader_parameter/kernel_spread = 6.87099984648926
+shader_parameter/canvas_scale = Vector2(1, 1)
+shader_parameter/radius = 3
+shader_parameter/edge_clamp = 0.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lmiho"]
+shader = ExtResource("4_kgg7h")
+shader_parameter/width_px = 4.0
+shader_parameter/color = Color(1, 0.27999997, 0.27999997, 0.5921569)
+shader_parameter/no_texture = 1
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ofdvu"]
+shader = ExtResource("4_kgg7h")
+shader_parameter/width_px = 14.0
+shader_parameter/color = Color(0.42000002, 0.5843333, 1, 0.54509807)
+shader_parameter/no_texture = 0
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_au3qc"]
+viewport_path = NodePath("SubViewport")
+
+[node name="TestsWorld" type="Node2D" unique_id=1879678444]
+script = ExtResource("1_o6sfi")
+
+[node name="Images" type="Node2D" parent="." unique_id=179949507]
+
+[node name="Placeholder1" type="Sprite2D" parent="Images" unique_id=444054803]
+position = Vector2(72, 71)
+texture = ExtResource("1_m3k4f")
+
+[node name="Placeholder4" type="Sprite2D" parent="Images" unique_id=1551190506]
+position = Vector2(-1707, 132)
+texture = ExtResource("2_gci61")
+
+[node name="Placeholder" type="Sprite2D" parent="Images" unique_id=704524005]
+position = Vector2(-1746, 1235)
+texture = ExtResource("3_7u122")
+
+[node name="Tilemap" type="Sprite2D" parent="Images" unique_id=1919087660]
+position = Vector2(-1138, 2060)
+texture = ExtResource("4_lmiho")
+
+[node name="Brush" type="Sprite2D" parent="Images" unique_id=1856343755]
+position = Vector2(-1832, 1972)
+texture = ExtResource("5_hdxc3")
+
+[node name="Placeholder2" type="Sprite2D" parent="Images" unique_id=947932881]
+position = Vector2(1059, 1323)
+texture = ExtResource("6_o6sfi")
+
+[node name="Platformer" type="Sprite2D" parent="Images" unique_id=143854592]
+position = Vector2(-216, 2489)
+texture = ExtResource("16_3u53g")
+
+[node name="Platformer2" type="Sprite2D" parent="Images" unique_id=884287419]
+position = Vector2(700, 2321)
+texture = ExtResource("17_xqs1w")
+
+[node name="Platformer3" type="Sprite2D" parent="Images" unique_id=1654285552]
+position = Vector2(795, 2893)
+scale = Vector2(2.296773, 2.296773)
+texture = ExtResource("18_854uo")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="Images" unique_id=1767629847]
+offset_left = -2807.0
+offset_top = 1820.9999
+offset_right = -1307.0
+offset_bottom = 3517.0
+scale = Vector2(0.43441546, 0.43441546)
+stream = ExtResource("8_wj4up")
+autoplay = true
+loop = true
+
+[node name="Platformer4" type="Sprite2D" parent="Images" unique_id=925876766]
+position = Vector2(2107.6387, 2551.17)
+scale = Vector2(0.8347273, 0.8347272)
+texture = ExtResource("12_xqs1w")
+
+[node name="Sprite2D" type="Sprite2D" parent="Images" unique_id=520903154]
+modulate = Color(0.87957054, 0.4390033, 0.18702641, 1)
+position = Vector2(1175, 2187.9998)
+scale = Vector2(60, 59.999996)
+texture = SubResource("PlaceholderTexture2D_ht068")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=955847848]
+limit_enabled = false
+script = ExtResource("2_kgg7h")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Camera2D" unique_id=1162055606]
+remote_path = NodePath("../../SubViewport/Camera2D")
+
+[node name="BlurShader" type="ColorRect" parent="Camera2D" unique_id=665974803]
+material = SubResource("ShaderMaterial_wj4up")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.88736546, 0, 0.2584316, 1)
+
+[node name="BackBufferCopy" type="BackBufferCopy" parent="Camera2D" unique_id=576058275]
+copy_mode = 2
+
+[node name="BlurShader2" type="ColorRect" parent="Camera2D" unique_id=253372141]
+material = SubResource("ShaderMaterial_hdxc3")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.88736546, 0, 0.2584316, 1)
+
+[node name="BackBufferCopy3" type="BackBufferCopy" parent="Camera2D" unique_id=813631794]
+copy_mode = 2
+
+[node name="VoronoiShader" type="ColorRect" parent="Camera2D" unique_id=1837313657]
+material = SubResource("ShaderMaterial_ojl2q")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.88736546, 0, 0.2584316, 1)
+
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="Camera2D" unique_id=395974831]
+copy_mode = 2
+
+[node name="KuwaharaShader" type="ColorRect" parent="Camera2D" unique_id=1377616818]
+material = SubResource("ShaderMaterial_o6sfi")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.88736546, 0, 0.2584316, 1)
+
+[node name="BackBufferCopy4" type="BackBufferCopy" parent="Camera2D" unique_id=1361297170]
+copy_mode = 2
+
+[node name="KuwaharaShader2" type="ColorRect" parent="Camera2D" unique_id=1378510395]
+material = SubResource("ShaderMaterial_6bopi")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.88736546, 0, 0.2584316, 1)
+
+[node name="Outline" type="ColorRect" parent="Camera2D" unique_id=68733463]
+material = SubResource("ShaderMaterial_lmiho")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -500.0
+offset_top = -250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.88736546, 0, 0.2584316, 1)
+
+[node name="SubViewport" type="SubViewport" parent="." unique_id=877802494]
+handle_input_locally = false
+render_target_update_mode = 4
+script = ExtResource("3_ofdvu")
+
+[node name="Camera2D" type="Camera2D" parent="SubViewport" unique_id=1661648899]
+zoom = Vector2(0.1, 0.1)
+limit_enabled = false
+limit_left = 0
+limit_top = 0
+limit_right = 1152
+limit_bottom = 648
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=608751292]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1336012058]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control" unique_id=1142996384]
+material = SubResource("ShaderMaterial_ofdvu")
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -511.0
+offset_top = -512.0
+offset_right = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = SubResource("ViewportTexture_au3qc")
+
+[node name="Label" type="Label" parent="CanvasLayer/Control" unique_id=1598148513]
+layout_mode = 1
+offset_left = 48.0
+offset_top = 53.0
+offset_right = 741.0
+offset_bottom = 344.0
+theme_override_colors/font_color = Color(0, 0, 0, 0.77254903)
+theme_override_font_sizes/font_size = 33
+text = "Left or right click + move to pan the camera
+
+Toggle shaders using keyboard keys:
+1 - Blur
+2 - Voronoi
+3 - Kuwahara"
+
+[node name="SceneSwitcher" parent="." unique_id=1897061740 instance=ExtResource("14_ojl2q")]
