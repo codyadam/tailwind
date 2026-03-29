@@ -51,41 +51,69 @@ func resolve_server_host() -> String:
 	return PRODUCTION_HOST
 
 
+## Host part for ws/wss URLs (brackets for IPv6 literals).
+func _host_for_websocket_url(host: String) -> String:
+	if host.begins_with("["):
+		return host
+	if ":" in host:
+		return "[%s]" % host
+	return host
+
+
+func _is_loopback_host(host: String) -> bool:
+	var h := host.to_lower()
+	return h == "127.0.0.1" or h == "localhost" or h == "::1"
+
+
+## Full WebSocket URL for [method connect_to_game_server]. Override with `--server-url=wss://host:4242`.
+## Browsers on HTTPS need `wss://` to a TLS-terminated endpoint; plain `ws://` is fine for local/desktop tests.
+func resolve_client_url() -> String:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--server-url="):
+			return a.get_slice("=", 1).strip_edges()
+	var host := resolve_server_host()
+	var scheme := "ws"
+	if OS.has_feature("web") and not _is_loopback_host(host):
+		scheme = "wss"
+	var h := _host_for_websocket_url(host)
+	return "%s://%s:%d" % [scheme, h, PORT]
+
+
 func go_offline() -> void:
 	var peer := multiplayer.multiplayer_peer
-	if peer is ENetMultiplayerPeer:
+	if peer and not (peer is OfflineMultiplayerPeer):
 		peer.close()
 	multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
 
 
 func start_server() -> void:
 	go_offline()
-	var enet := ENetMultiplayerPeer.new()
-	if enet.create_server(PORT, 32) != OK:
+	var wsm := WebSocketMultiplayerPeer.new()
+	if wsm.create_server(PORT) != OK:
 		push_error("Failed to start server")
 		return
-	multiplayer.multiplayer_peer = enet
+	multiplayer.multiplayer_peer = wsm
 	multiplayer.server_relay = true
-	print("Server running on port ", PORT)
+	print("Server running WebSocket on port ", PORT)
 
 
 func connect_to_game_server() -> void:
 	if _is_dedicated_server():
 		return
 	var existing := multiplayer.multiplayer_peer
-	if existing is ENetMultiplayerPeer:
+	if existing and not (existing is OfflineMultiplayerPeer):
 		var st: int = existing.get_connection_status()
 		if st == MultiplayerPeer.CONNECTION_CONNECTED or st == MultiplayerPeer.CONNECTION_CONNECTING:
 			return
 	go_offline()
-	var host := resolve_server_host()
-	var enet := ENetMultiplayerPeer.new()
-	if enet.create_client(host, PORT) != OK:
-		push_error("Failed to create client for ", host)
+	var url := resolve_client_url()
+	var wsm := WebSocketMultiplayerPeer.new()
+	if wsm.create_client(url) != OK:
+		push_error("Failed to create client for ", url)
 		return
-	multiplayer.multiplayer_peer = enet
+	multiplayer.multiplayer_peer = wsm
 	multiplayer.server_relay = true
-	print("Connecting to ", host, ":", PORT)
+	print("Connecting to ", url)
 
 
 func _on_connected_to_server() -> void:
