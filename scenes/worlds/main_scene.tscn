@@ -14,6 +14,7 @@
 [ext_resource type="Shader" uid="uid://c6bb4cjonetg4" path="res://shaders/kuwahara-shader.gdshader" id="12_2og3l"]
 [ext_resource type="Script" uid="uid://ckb06oqj7n7uf" path="res://scripts/sub_viewport_mirror_world.gd" id="13_6x2wg"]
 [ext_resource type="PackedScene" uid="uid://dhlqbj16est0a" path="res://scenes/scene_switcher.tscn" id="14_df2i4"]
+[ext_resource type="FontFile" uid="uid://cns567ailcpgj" path="res://assets/NotoColorEmoji-Regular.ttf" id="14_jd3ld"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mo76n"]
 
@@ -481,22 +482,17 @@ radius = 30.0
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_d5x1h"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_42l1d"]
-shader = ExtResource("8_4lxb2")
-shader_parameter/width_px = 10.0
-shader_parameter/color = Color(1, 0.01999998, 0.01999998, 0.7647059)
-shader_parameter/no_texture = 0
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_df2i4"]
-shader = ExtResource("8_4lxb2")
-shader_parameter/width_px = 9.0
-shader_parameter/color = Color(0.24000001, 0.29066664, 1, 0.6666667)
-shader_parameter/no_texture = 0
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ep8eu"]
+shader = ExtResource("8_4lxb2")
+shader_parameter/width_px = 14.5
+shader_parameter/color = Color(0.1254902, 0.18431373, 0.49411765, 0.87058824)
+shader_parameter/no_texture = 0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_df2i4"]
-viewport_path = NodePath("UI/Control/SubViewportContainer/VP0")
+viewport_path = NodePath("VP0")
+
+[sub_resource type="FontVariation" id="FontVariation_m6iqd"]
+fallbacks = Array[Font]([ExtResource("14_jd3ld")])
 
 [node name="Main Scene" type="Node2D" unique_id=1358111768]
 
@@ -525,6 +521,7 @@ scale = Vector2(1.2581018, 1.2581018)
 texture = ExtResource("4_m6iqd")
 
 [node name="Rect" type="ColorRect" parent="World" unique_id=1758484232]
+visibility_layer = 2
 material = SubResource("ShaderMaterial_mo76n")
 offset_left = 2364.0
 offset_top = -1582.0
@@ -534,6 +531,7 @@ rotation = 0.64849484
 color = Color(0, 0, 0, 1)
 
 [node name="Rect2" type="ColorRect" parent="World" unique_id=1779946131]
+visibility_layer = 2
 material = SubResource("ShaderMaterial_mo76n")
 offset_left = 617.00024
 offset_top = -1305.0002
@@ -543,6 +541,7 @@ rotation = 0.64849484
 color = Color(0, 0, 0, 1)
 
 [node name="Rect3" type="ColorRect" parent="World" unique_id=1223901480]
+visibility_layer = 2
 material = SubResource("ShaderMaterial_mo76n")
 offset_left = -1711.0001
 offset_top = -422.00012
@@ -552,6 +551,7 @@ rotation = 0.64849484
 color = Color(0.14901961, 0.14117648, 0.21960784, 1)
 
 [node name="Rect4" type="ColorRect" parent="World" unique_id=129974888]
+visibility_layer = 2
 material = SubResource("ShaderMaterial_mo76n")
 offset_left = -2558.0
 offset_top = 989.0
@@ -643,33 +643,29 @@ scale = Vector2(60, 59.999996)
 texture = SubResource("PlaceholderTexture2D_d5x1h")
 
 [node name="OtherCamTransform" type="RemoteTransform2D" parent="World/Player" unique_id=1132298721]
-remote_path = NodePath("../../../UI/Control/SubViewportContainer/VP0/OtherCam")
+remote_path = NodePath("../../../VP0/OtherCam")
 
 [node name="MainCamTransform" type="RemoteTransform2D" parent="World/Player" unique_id=713918717]
 remote_path = NodePath("../../../MainCam")
 
-[node name="Controls Text box" type="ColorRect" parent="World" unique_id=1594711174]
-offset_left = -745.0
-offset_top = -164.0
-offset_right = -423.0
-offset_bottom = 200.0
-
-[node name="Label" type="Label" parent="World/Controls Text box" unique_id=760049260]
-layout_mode = 0
-offset_left = 34.0
-offset_top = 49.0
-offset_right = 263.0
-offset_bottom = 311.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 36
-text = "Controls: 
-R - Reset
-WASD - Move
-Shift - Dash
-Space - Jump"
-
 [node name="MainCam" type="Camera2D" parent="." unique_id=286946177]
 position = Vector2(-183.06, 62)
+limit_enabled = false
+limit_left = 0
+limit_top = 0
+limit_right = 1152
+limit_bottom = 648
+
+[node name="VP0" type="SubViewport" parent="." unique_id=639256772]
+disable_3d = true
+handle_input_locally = false
+canvas_cull_mask = 4294967293
+render_target_update_mode = 4
+script = ExtResource("13_6x2wg")
+
+[node name="OtherCam" type="Camera2D" parent="VP0" unique_id=1606573101]
+position = Vector2(-183.06, 62)
+zoom = Vector2(0.09, 0.09)
 limit_enabled = false
 limit_left = 0
 limit_top = 0
@@ -680,6 +676,15 @@ limit_bottom = 648
 
 [node name="Control" type="Control" parent="UI" unique_id=795970275]
 layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Minimap" type="TextureRect" parent="UI/Control" unique_id=629068255]
+material = SubResource("ShaderMaterial_ep8eu")
+layout_mode = 1
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
@@ -689,54 +694,27 @@ offset_left = -500.0
 offset_top = -500.0
 grow_horizontal = 0
 grow_vertical = 0
-
-[node name="SubViewportContainer" type="SubViewportContainer" parent="UI/Control" unique_id=1278699041]
-material = SubResource("ShaderMaterial_42l1d")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
-
-[node name="VP0" type="SubViewport" parent="UI/Control/SubViewportContainer" unique_id=639256772]
-disable_3d = true
-handle_input_locally = false
-canvas_cull_mask = 4294967293
-size = Vector2i(500, 500)
-render_target_update_mode = 4
-script = ExtResource("13_6x2wg")
-
-[node name="OtherCam" type="Camera2D" parent="UI/Control/SubViewportContainer/VP0" unique_id=1606573101]
-position = Vector2(-183.06, 62)
-zoom = Vector2(0.1, 0.1)
-limit_enabled = false
-limit_left = 0
-limit_top = 0
-limit_right = 1152
-limit_bottom = 648
-
-[node name="SubViewportContainer2" type="SubViewportContainer" parent="UI/Control" unique_id=1296342344]
-material = SubResource("ShaderMaterial_df2i4")
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-stretch = true
-
-[node name="VP1" type="SubViewport" parent="UI/Control/SubViewportContainer2" unique_id=1448440530]
-disable_3d = true
-handle_input_locally = false
-size = Vector2i(500, 500)
-render_target_update_mode = 4
-
-[node name="BlurShader" type="TextureRect" parent="UI/Control/SubViewportContainer2/VP1" unique_id=629068255]
-material = SubResource("ShaderMaterial_ep8eu")
-offset_right = 40.0
-offset_bottom = 40.0
 texture = SubResource("ViewportTexture_df2i4")
+
+[node name="Label" type="Label" parent="UI/Control" unique_id=760049260]
+layout_mode = 1
+offset_left = 53.0
+offset_top = 56.0
+offset_right = 604.0
+offset_bottom = 530.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.99, 0.99, 0.99, 0.53333336)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = SubResource("FontVariation_m6iqd")
+theme_override_font_sizes/font_size = 36
+text = "Controls: 
+R - Reset
+WASD - Move
+Shift - Dash
+Space - Jump
+
+
+CTRL + 1 ➡️ Game scene
+CTRL + 2 ➡️ Demo shader scene"
 
 [node name="SceneSwitcher" parent="." unique_id=1897061740 instance=ExtResource("14_df2i4")]
