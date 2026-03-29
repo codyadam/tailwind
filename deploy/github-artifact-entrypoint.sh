@@ -28,10 +28,10 @@ if [[ -z "$(server_binary)" ]]; then
 	ARTIFACT_ID="$(
 		curl -sS -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
 			"https://api.github.com/repos/${REPO}/actions/runs/${RUN_ID}/artifacts" \
-			| jq -r '.artifacts[] | select(.name == "linux-server-arm64") | .id' | head -1
+			| jq -r '.artifacts[] | select(.name == "server-arm64") | .id' | head -1
 	)"
 	if [[ -z "$ARTIFACT_ID" ]]; then
-		echo "Artifact linux-server-arm64 not found on run ${RUN_ID}."
+		echo "Artifact server-arm64 not found on run ${RUN_ID}."
 		exit 1
 	fi
 
@@ -41,9 +41,9 @@ if [[ -z "$(server_binary)" ]]; then
 		-o /tmp/artifact.zip \
 		"https://api.github.com/repos/${REPO}/actions/artifacts/${ARTIFACT_ID}/zip"
 	unzip -o -q /tmp/artifact.zip -d /tmp/artex
-	BUNDLE="$(find /tmp/artex -name 'linux-server-arm64.zip' -type f | head -1)"
+	BUNDLE="$(find /tmp/artex -name 'server-arm64.zip' -type f | head -1)"
 	if [[ -z "$BUNDLE" ]]; then
-		echo "linux-server-arm64.zip not found inside GitHub artifact (expected Godot .zip export)."
+		echo "server-arm64.zip not found inside GitHub artifact (expected Godot .zip export)."
 		find /tmp/artex -type f || true
 		exit 1
 	fi
