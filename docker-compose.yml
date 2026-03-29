@@ -1,4 +1,4 @@
-# Dedicated server: waits (first boot only) for CI, downloads artifact server-arm64 (server-arm64.zip), runs Godot server.
+# Dedicated server: each start downloads server-arm64 for SERVER_COMMIT_SHA or GITHUB_SHA (must match the push you care about). Ignores older green runs on main. ARTIFACT_MAX_AGE_SEC (default 600) skips stale artifacts while waiting for the new workflow.
 # Requires: arm64 host (or QEMU) matching the exported binary.
 #
 # Create a classic PAT: https://github.com/settings/tokens — scope "repo" (private repos) or
@@ -7,9 +7,10 @@
 # Usage:
 #   export GITHUB_REPOSITORY=youruser/tailwind
 #   export GITHUB_TOKEN=ghp_...
+#   export GITHUB_SHA=$(git rev-parse HEAD)   # or SERVER_COMMIT_SHA — must match the commit you expect CI to build
 #   docker compose up -d
 #
-# New CI build: docker compose down && docker volume rm tailwind_server_data && docker compose up -d
+# Optional: ARTIFACT_MAX_AGE_SEC=0 when deploying an older commit; raise if CI usually takes >10m before the artifact exists.
 
 name: tailwind
 
@@ -25,7 +26,11 @@ services:
     environment:
       GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
       GITHUB_TOKEN: ${GITHUB_TOKEN}
-      INITIAL_WAIT_SECONDS: ${INITIAL_WAIT_SECONDS:-300}
+      GITHUB_SHA: ${GITHUB_SHA:-}
+      SERVER_COMMIT_SHA: ${SERVER_COMMIT_SHA:-}
+      ARTIFACT_MAX_AGE_SEC: ${ARTIFACT_MAX_AGE_SEC:-600}
+      INITIAL_WAIT_SECONDS: ${INITIAL_WAIT_SECONDS:-30}
+      INSTALL_MAX_ATTEMPTS: ${INSTALL_MAX_ATTEMPTS:-120}
     volumes:
       - server_data:/opt/server
 
