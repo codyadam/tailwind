@@ -1,0 +1,34 @@
+# Dedicated server: waits (first boot only) for CI, downloads artifact linux-server-arm64, runs Godot server.
+# Requires: arm64 host (or QEMU) matching the exported binary.
+#
+# Create a classic PAT: https://github.com/settings/tokens — scope "repo" (private repos) or
+# fine-grained: Actions read + Contents read on this repository.
+#
+# Usage:
+#   export GITHUB_REPOSITORY=youruser/tailwind
+#   export GITHUB_TOKEN=ghp_...
+#   docker compose up -d
+#
+# New CI build: docker compose down && docker volume rm tailwind_server_data && docker compose up -d
+
+name: tailwind
+
+services:
+  tailwind-server:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.server
+    platform: linux/arm64
+    restart: unless-stopped
+    ports:
+      - "4242:4242/udp"
+      - "4242:4242/tcp"
+    environment:
+      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+      INITIAL_WAIT_SECONDS: ${INITIAL_WAIT_SECONDS:-300}
+    volumes:
+      - server_data:/opt/server
+
+volumes:
+  server_data:
