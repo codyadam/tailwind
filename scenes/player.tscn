@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://diparly1twk40"]
+
+[ext_resource type="Script" uid="uid://chuerm6v08iej" path="res://scripts/player-movements.gd" id="1_3vyb7"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gyfs4"]
+radius = 30.0
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_d5x1h"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3vyb7"]
+
+[node name="Player" type="CharacterBody2D" unique_id=223307406]
+script = ExtResource("1_3vyb7")
+max_run_speed = 550.0
+ground_friction = 2000.0
+air_friction = 1000.0
+strafe_opposing_multiplier = 5.11
+strafe_aligned_multiplier = 1.0
+strafe_neutral_deadzone = 42.337
+jump_velocity = -800.0
+down_input_gravity_multiplier = 2.0
+dash_speed = 1200.0
+dash_duration = 0.2
+dash_spent_modulate = Color(1, 0.18416667, 0.110000014, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=114720810]
+shape = SubResource("CircleShape2D_gyfs4")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1756089236]
+modulate = Color(0.87957054, 0.4390033, 0.18702641, 1)
+position = Vector2(-3.0398369e-06, 8.344649e-07)
+scale = Vector2(60, 59.999996)
+texture = SubResource("PlaceholderTexture2D_d5x1h")
+
+[node name="OtherCamTransform" type="RemoteTransform2D" parent="." unique_id=1133984166]
+remote_path = NodePath("../../../VP0/OtherCam")
+
+[node name="MainCamTransform" type="RemoteTransform2D" parent="." unique_id=1269491718]
+remote_path = NodePath("../../../MainCam")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=174566772]
+replication_config = SubResource("SceneReplicationConfig_3vyb7")

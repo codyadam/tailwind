@@ -1,4 +1,4 @@
-# Web export + GitHub Pages (Actions deployment). Only the "Web" preset exists in export_presets.cfg.
+# Web export → GitHub Pages; Linux dedicated server (preset "Linux Server", arm64 / Raspberry Pi 64-bit) → workflow artifact.
 # Pages: Settings → Pages → Source: GitHub Actions (not a branch).
 # Pin GODOT_VERSION and the container image tag to the same Godot release.
 
@@ -49,6 +49,36 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
+
+  export-linux-server:
+    name: Linux Server Export (arm64)
+    runs-on: ubuntu-24.04
+    container:
+      image: barichello/godot-ci:4.6.1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Setup
+        run: |
+          mkdir -v -p ~/.local/share/godot/export_templates/
+          mv /root/.local/share/godot/export_templates/${GODOT_VERSION}.stable ~/.local/share/godot/export_templates/${GODOT_VERSION}.stable
+
+      - name: Linux dedicated server build
+        run: |
+          mkdir -v -p build/linux-server
+          EXPORT_DIR="$(readlink -f build)"
+          cd "$PROJECT_PATH"
+          godot --headless --verbose --export-release "Linux Server" "$EXPORT_DIR/linux-server/server.arm64"
+          chmod +x "$EXPORT_DIR/linux-server/server.arm64"
+
+      - name: Upload Linux server artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-server-arm64
+          path: build/linux-server/
 
   deploy:
     name: Deploy to GitHub Pages

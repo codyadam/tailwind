@@ -7,12 +7,13 @@ extends Node2D
 @onready var kuwahara_shader: ColorRect = $Camera2D/KuwaharaShader
 @onready var kuwahara_shader2: ColorRect = $Camera2D/KuwaharaShader2
 
-const DEFAULT_TEXT = "Left or right click + move to pan the camera
+const DEFAULT_TEXT = "Left or right click + move to Pan the camera
+Mouse Scroll to Zoom
 
 Toggle shaders using keyboard keys:"
 
 var states = {
-	"blur": false,
+	"blur": true,
 	"blur2": false,
 	"voronoi": false,
 	"kuwahara": true,
