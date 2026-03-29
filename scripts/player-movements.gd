@@ -4,6 +4,7 @@ extends CharacterBody2D
 ## Celeste-like momentum, jump assists, dash + post-dash drag.
 ## Ground vs wall vs ceiling uses CharacterBody2D collision flags from the last move_and_slide()
 ## (is_on_floor, is_on_wall, is_on_ceiling), with up_direction and floor_max_angle defining "floor".
+## Client-authoritative: owning peer simulates; global_position and velocity replicate via MultiplayerSynchronizer (server_relay).
 
 enum MoveState { RUN, DASH, POST_DASH }
 
@@ -69,27 +70,74 @@ var _was_on_floor: bool = false
 var _was_on_wall: bool = false
 var _facing_x: float = 1.0
 
+## Which peer drives this body (must match multiplayer authority for gameplay).
+@export var player_peer: int = 1
+
 @onready var _sprite: Sprite2D = $Sprite2D
 
 var _sprite_base_scale: Vector2 = Vector2.ONE
 
 
 func _ready() -> void:
+	_refresh_camera_remote_transforms()
 	if _sprite:
 		_sprite_base_scale = _sprite.scale
 
 
+func _network_active() -> bool:
+	return multiplayer.has_multiplayer_peer() and not (multiplayer.multiplayer_peer is OfflineMultiplayerPeer)
+
+
+func _spawned_owner_peer_id() -> int:
+	var n := str(name)
+	if n.is_valid_int():
+		return n.to_int()
+	return -1
+
+
+## True when this process should run physics and read local Input (client-authoritative POC).
+## Uses multiplayer authority when it matches; also matches by node name (name = str(peer_id)) as a fallback.
+func _is_controlling_locally() -> bool:
+	if not _network_active():
+		return true
+	var uid := multiplayer.get_unique_id()
+	if uid == get_multiplayer_authority():
+		return true
+	var owner_id := _spawned_owner_peer_id()
+	return owner_id >= 0 and owner_id == uid
+
+
+func _refresh_camera_remote_transforms() -> void:
+	var mct := $MainCamTransform as RemoteTransform2D
+	var oct := $OtherCamTransform as RemoteTransform2D
+	var follow := _is_controlling_locally()
+	if follow:
+		# Player lives under Main Scene / Network / Player — three parents up to scene root where MainCam and VP0 live.
+		mct.remote_path = NodePath("../../../MainCam")
+		oct.remote_path = NodePath("../../../VP0/OtherCam")
+	else:
+		mct.remote_path = NodePath("")
+		oct.remote_path = NodePath("")
+
+
+func _do_reset() -> void:
+	global_position = Vector2.ZERO
+	velocity = Vector2.ZERO
+	_state = MoveState.RUN
+	_dash_available = true
+	_dash_timer = 0.0
+	_post_dash_timer = 0.0
+	_coyote_timer = 0.0
+	_jump_buffer_timer = 0.0
+
+
 # Order: timers from last slide -> state velocity -> move_and_slide -> wall dash/coyote (is_on_wall / is_on_floor per last move_and_slide)
 func _physics_process(delta: float) -> void:
+	if not _is_controlling_locally():
+		return
+
 	if Input.is_action_just_pressed("game_reset"):
-		global_position = Vector2.ZERO
-		velocity = Vector2.ZERO
-		_state = MoveState.RUN
-		_dash_available = true
-		_dash_timer = 0.0
-		_post_dash_timer = 0.0
-		_coyote_timer = 0.0
-		_jump_buffer_timer = 0.0
+		_do_reset()
 
 	var on_floor := is_on_floor()
 	var gravity := get_gravity()
