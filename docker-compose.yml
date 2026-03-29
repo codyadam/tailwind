@@ -1,4 +1,4 @@
-# Dedicated server: waits (first boot only) for CI, downloads artifact linux-server-arm64, runs Godot server.
+# Dedicated server: waits (first boot only) for CI, downloads artifact linux-server-arm64 (Godot .zip export), runs Godot server.
 # Requires: arm64 host (or QEMU) matching the exported binary.
 #
 # Create a classic PAT: https://github.com/settings/tokens — scope "repo" (private repos) or

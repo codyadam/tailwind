@@ -68,17 +68,16 @@ jobs:
 
       - name: Linux dedicated server build
         run: |
-          mkdir -v -p build/linux-server
+          mkdir -v -p build
           EXPORT_DIR="$(readlink -f build)"
           cd "$PROJECT_PATH"
-          godot --headless --verbose --export-release "Linux Server" "$EXPORT_DIR/linux-server/server.arm64"
-          chmod +x "$EXPORT_DIR/linux-server/server.arm64"
+          godot --headless --verbose --export-release "Linux Server" "$EXPORT_DIR/linux-server-arm64.zip"
 
       - name: Upload Linux server artifact
         uses: actions/upload-artifact@v4
         with:
           name: linux-server-arm64
-          path: build/linux-server/
+          path: build/linux-server-arm64.zip
 
   deploy:
     name: Deploy to GitHub Pages

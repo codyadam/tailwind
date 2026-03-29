@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-BINARY="/opt/server/server.arm64"
 WAIT_SECONDS="${INITIAL_WAIT_SECONDS:-300}"
 REPO="${GITHUB_REPOSITORY:?Set GITHUB_REPOSITORY to owner/repo}"
 TOKEN="${GITHUB_TOKEN:?Set GITHUB_TOKEN with repo scope (actions:read for private repos)}"
 
-if [[ ! -f "$BINARY" ]]; then
+mkdir -p /opt/server
+
+server_binary() {
+	find /opt/server -maxdepth 1 -type f -name '*.arm64' 2>/dev/null | head -1
+}
+
+if [[ -z "$(server_binary)" ]]; then
 	echo "No server binary in volume; waiting ${WAIT_SECONDS}s for CI to finish..."
 	sleep "$WAIT_SECONDS"
 
@@ -30,23 +35,41 @@ if [[ ! -f "$BINARY" ]]; then
 		exit 1
 	fi
 
-	mkdir -p /opt/server
 	rm -rf /tmp/artex
 	mkdir -p /tmp/artex
 	curl -sSL -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
 		-o /tmp/artifact.zip \
 		"https://api.github.com/repos/${REPO}/actions/artifacts/${ARTIFACT_ID}/zip"
 	unzip -o -q /tmp/artifact.zip -d /tmp/artex
-	SERVER_PATH="$(find /tmp/artex -name 'server.arm64' -type f | head -1)"
-	if [[ -z "$SERVER_PATH" ]]; then
-		echo "server.arm64 not found inside artifact zip."
-		find /tmp/artex -type f -maxdepth 4 || true
+	BUNDLE="$(find /tmp/artex -name 'linux-server-arm64.zip' -type f | head -1)"
+	if [[ -z "$BUNDLE" ]]; then
+		echo "linux-server-arm64.zip not found inside GitHub artifact (expected Godot .zip export)."
+		find /tmp/artex -type f || true
 		exit 1
 	fi
-	cp -f "$SERVER_PATH" "$BINARY"
-	chmod +x "$BINARY"
+	unzip -o -q "$BUNDLE" -d /opt/server
 	rm -rf /tmp/artex /tmp/artifact.zip
-	echo "Installed server binary from run ${RUN_ID}."
+	echo "Installed server bundle from run ${RUN_ID}."
 fi
 
-exec "$BINARY" "$@"
+BINARY="$(server_binary)"
+if [[ -z "$BINARY" ]]; then
+	echo "No *.arm64 binary under /opt/server after install."
+	find /opt/server -type f || true
+	exit 1
+fi
+chmod +x "$BINARY"
+
+PCK="${BINARY}.pck"
+if [[ -f "$PCK" ]]; then
+	exec "$BINARY" "$@"
+fi
+
+PCK_FALLBACK="$(find /opt/server -maxdepth 1 -type f -name '*.pck' | head -1)"
+if [[ -z "$PCK_FALLBACK" ]]; then
+	echo "No .pck next to ${BINARY} and no *.pck in /opt/server."
+	echo "Remove the server volume and redeploy:"
+	echo "  docker compose down && docker volume rm tailwind_server_data && docker compose up -d"
+	exit 1
+fi
+exec "$BINARY" --main-pack "$PCK_FALLBACK" "$@"
