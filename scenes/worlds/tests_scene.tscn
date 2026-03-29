@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://b5ekv4ywkw7nd" path="res://assets/platformer.png" id="16_3u53g"]
 [ext_resource type="Texture2D" uid="uid://dh2dcjx2t2l6l" path="res://assets/platformer2.png" id="17_xqs1w"]
 [ext_resource type="Texture2D" uid="uid://d0vhet6vu3onm" path="res://assets/platformer3.png" id="18_854uo"]
+[ext_resource type="FontFile" uid="uid://cns567ailcpgj" path="res://assets/NotoColorEmoji-Regular.ttf" id="19_854uo"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ht068"]
 
@@ -77,6 +78,9 @@ shader_parameter/no_texture = 0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_au3qc"]
 viewport_path = NodePath("SubViewport")
+
+[sub_resource type="FontVariation" id="FontVariation_ht068"]
+fallbacks = Array[Font]([ExtResource("19_854uo")])
 
 [node name="TestsWorld" type="Node2D" unique_id=1879678444]
 script = ExtResource("1_o6sfi")
@@ -288,7 +292,10 @@ offset_left = 48.0
 offset_top = 53.0
 offset_right = 741.0
 offset_bottom = 344.0
-theme_override_colors/font_color = Color(0, 0, 0, 0.77254903)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 1, 1, 0.5647059)
+theme_override_constants/outline_size = 15
+theme_override_fonts/font = SubResource("FontVariation_ht068")
 theme_override_font_sizes/font_size = 33
 text = "Left or right click + move to pan the camera
 

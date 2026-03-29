@@ -44,8 +44,8 @@ func _update_ui() -> void:
 	blur_shader2.visible = states["blur2"]
 	kuwahara_shader2.visible = states["kuwahara2"]
 	label.text = DEFAULT_TEXT
-	label.text += "\n1 - Blur: " + ("🟢 On" if states["blur"] else "🔴 Off")
-	label.text += "\n2 - BlurShader2: " + ("🟢 On" if states["blur2"] else "🔴 Off")
-	label.text += "\n3 - Voronoi: " + ("🟢 On" if states["voronoi"] else "🔴 Off")
-	label.text += "\n4 - Kuwahara: " + ("🟢 On" if states["kuwahara"] else "🔴 Off")
-	label.text += "\n5 - KuwaharaShader2: " + ("🟢 On" if states["kuwahara2"] else "🔴 Off")
+	label.text += "\n1 " + ("🟢" if states["blur"] else "🔴") + " - Blur"
+	label.text += "\n2 " + ("🟢" if states["blur2"] else "🔴") + " - BlurShader2"
+	label.text += "\n3 " + ("🟢" if states["voronoi"] else "🔴") + " - Voronoi"
+	label.text += "\n4 " + ("🟢" if states["kuwahara"] else "🔴") + " - Kuwahara"
+	label.text += "\n5 " + ("🟢" if states["kuwahara2"] else "🔴") + " - KuwaharaShader2"
