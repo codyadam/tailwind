@@ -4,8 +4,11 @@ RUN apt-get update \
 	&& apt-get install -y --no-install-recommends bash curl ca-certificates jq unzip \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY deploy/github-artifact-entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
+COPY deploy/github-artifact-dl.sh /dl.sh
+RUN chmod +x /dl.sh
 
 WORKDIR /opt/server
-ENTRYPOINT ["/entrypoint.sh"]
+
+RUN /dl.sh
+
+ENTRYPOINT ["./server-arm64"]

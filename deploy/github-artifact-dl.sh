@@ -157,12 +157,5 @@ if [[ -z "$BINARY" ]]; then
 fi
 chmod +x "$BINARY"
 
-PCK="${BINARY}.pck"
-if [[ -f "$PCK" ]]; then
-	echo "Starting server... ($BINARY)"
-	exec "$BINARY" "$@"
-	echo "Server stopped."
-fi
-
-echo "No .pck next to ${BINARY} and no *.pck in /opt/server."
-exit 1
+echo "Server executable ready: $BINARY"
+exit 0
