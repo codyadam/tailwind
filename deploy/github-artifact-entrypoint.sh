@@ -13,10 +13,12 @@ TOKEN="${GITHUB_TOKEN:?Set GITHUB_TOKEN with repo scope (actions:read for privat
 
 # Commit this deploy expects (same as the push that should have triggered godot-ci). Prevents downloading
 # the previous successful run while the new workflow is still running.
-WANT_SHA_RAW="${SERVER_COMMIT_SHA:-${GITHUB_SHA:-}}"
+# Coolify sets SOURCE_COMMIT for git-based deploys; enable it at runtime if it is build-only in your app settings.
+WANT_SHA_RAW="${SERVER_COMMIT_SHA:-${GITHUB_SHA:-${SOURCE_COMMIT:-}}}"
 if [[ -z "$WANT_SHA_RAW" ]]; then
-	echo "Set SERVER_COMMIT_SHA or GITHUB_SHA to the commit that produced this deploy (e.g. the push SHA)."
-	echo "Example: GITHUB_SHA=\$(git rev-parse HEAD) docker compose up -d"
+	echo "No commit SHA in environment. Set one of: SERVER_COMMIT_SHA, GITHUB_SHA, or SOURCE_COMMIT (Coolify)."
+	echo "Local: GITHUB_SHA=\$(git rev-parse HEAD) docker compose up -d"
+	echo "Coolify: add SOURCE_COMMIT to this service (Environment Variables) or enable passing it to the running container."
 	exit 1
 fi
 WANT_SHA="$(echo "$WANT_SHA_RAW" | tr '[:upper:]' '[:lower:]')"

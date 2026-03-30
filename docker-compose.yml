@@ -1,4 +1,4 @@
-# Dedicated server: each start downloads server-arm64 for SERVER_COMMIT_SHA or GITHUB_SHA (must match the push you care about). Ignores older green runs on main. ARTIFACT_MAX_AGE_SEC (default 600) skips stale artifacts while waiting for the new workflow.
+# Dedicated server: each start downloads server-arm64 for the deployed commit (SERVER_COMMIT_SHA, GITHUB_SHA, or Coolify SOURCE_COMMIT). Ignores older green runs on main. ARTIFACT_MAX_AGE_SEC (default 600) skips stale artifacts while waiting for the new workflow.
 # Requires: arm64 host (or QEMU) matching the exported binary.
 #
 # Create a classic PAT: https://github.com/settings/tokens — scope "repo" (private repos) or
@@ -7,8 +7,10 @@
 # Usage:
 #   export GITHUB_REPOSITORY=youruser/tailwind
 #   export GITHUB_TOKEN=ghp_...
-#   export GITHUB_SHA=$(git rev-parse HEAD)   # or SERVER_COMMIT_SHA — must match the commit you expect CI to build
+#   export GITHUB_SHA=$(git rev-parse HEAD)   # or SERVER_COMMIT_SHA
 #   docker compose up -d
+#
+# Coolify: add a runtime env var SOURCE_COMMIT=$SOURCE_COMMIT (predefined; see Environment Variables docs). Leave “Runtime” enabled so the entrypoint sees the deploy commit.
 #
 # Optional: ARTIFACT_MAX_AGE_SEC=0 when deploying an older commit; raise if CI usually takes >10m before the artifact exists.
 
@@ -28,6 +30,7 @@ services:
       GITHUB_TOKEN: ${GITHUB_TOKEN}
       GITHUB_SHA: ${GITHUB_SHA:-}
       SERVER_COMMIT_SHA: ${SERVER_COMMIT_SHA:-}
+      SOURCE_COMMIT: ${SOURCE_COMMIT:-}
       ARTIFACT_MAX_AGE_SEC: ${ARTIFACT_MAX_AGE_SEC:-600}
       INITIAL_WAIT_SECONDS: ${INITIAL_WAIT_SECONDS:-30}
       INSTALL_MAX_ATTEMPTS: ${INSTALL_MAX_ATTEMPTS:-120}
