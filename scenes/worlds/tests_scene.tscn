@@ -20,6 +20,7 @@
 [ext_resource type="Texture2D" uid="uid://dh2dcjx2t2l6l" path="res://assets/platformer2.png" id="17_xqs1w"]
 [ext_resource type="Texture2D" uid="uid://d0vhet6vu3onm" path="res://assets/platformer3.png" id="18_854uo"]
 [ext_resource type="FontFile" uid="uid://cns567ailcpgj" path="res://assets/NotoColorEmoji-Regular.ttf" id="19_854uo"]
+[ext_resource type="PackedScene" uid="uid://v1ytb458s7g0" path="res://scenes/performance_saver.tscn" id="21_ht068"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ht068"]
 
@@ -305,3 +306,5 @@ Toggle shaders using keyboard keys:
 3 - Kuwahara"
 
 [node name="SceneSwitcher" parent="." unique_id=1897061740 instance=ExtResource("14_ojl2q")]
+
+[node name="PerformanceSaver" parent="." unique_id=115034881 instance=ExtResource("21_ht068")]

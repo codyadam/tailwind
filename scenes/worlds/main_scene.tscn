@@ -15,7 +15,9 @@
 [ext_resource type="Script" uid="uid://ckb06oqj7n7uf" path="res://scripts/sub_viewport_mirror_world.gd" id="13_6x2wg"]
 [ext_resource type="PackedScene" uid="uid://dhlqbj16est0a" path="res://scenes/scene_switcher.tscn" id="14_df2i4"]
 [ext_resource type="FontFile" uid="uid://cns567ailcpgj" path="res://assets/NotoColorEmoji-Regular.ttf" id="14_jd3ld"]
+[ext_resource type="Script" uid="uid://6n7j7e05thsj" path="res://scripts/network_indicator.gd" id="15_wnrm0"]
 [ext_resource type="Script" uid="uid://bu5uxij3lvq3r" path="res://scripts/network.gd" id="16_m6iqd"]
+[ext_resource type="PackedScene" uid="uid://v1ytb458s7g0" path="res://scenes/performance_saver.tscn" id="18_x2117"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mo76n"]
 
@@ -687,6 +689,25 @@ Space - Jump
 CTRL + 1 ➡️ Game scene
 CTRL + 2 ➡️ Demo shader scene"
 
+[node name="NetworkIndicator" type="Label" parent="UI/Control" unique_id=879043404]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -422.0
+offset_top = 44.0
+offset_right = -40.0
+offset_bottom = 244.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(0.99, 0.99, 0.99, 0.53333336)
+theme_override_constants/outline_size = 14
+theme_override_fonts/font = SubResource("FontVariation_m6iqd")
+theme_override_font_sizes/font_size = 36
+text = "Online 🟢"
+horizontal_alignment = 2
+script = ExtResource("15_wnrm0")
+
 [node name="SceneSwitcher" parent="." unique_id=1897061740 instance=ExtResource("14_df2i4")]
 
 [node name="Network" type="Node" parent="." unique_id=1243303630]
@@ -695,3 +716,5 @@ script = ExtResource("16_m6iqd")
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1374940070]
 _spawnable_scenes = PackedStringArray("uid://diparly1twk40")
 spawn_path = NodePath("../Network")
+
+[node name="PerformanceSaver" parent="." unique_id=115034881 instance=ExtResource("18_x2117")]
