@@ -1,6 +1,44 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Set ENTRYPOINT_DEBUG_ENV=1 (or true) to log all environment variables on startup (secrets redacted).
+entrypoint_debug_env() {
+	case "${ENTRYPOINT_DEBUG_ENV:-}" in
+	1 | true | yes | YES) return 0 ;;
+	*) return 1 ;;
+	esac
+}
+
+redact_env_dump() {
+	sed -E 's/(^[^=]*(TOKEN|SECRET|PASSWORD|API_KEY|BEARER)=).*/\1<redacted>/I'
+}
+
+dump_all_env_sorted() {
+	echo "=== entrypoint: full environment (sorted, sensitive values redacted) ===" >&2
+	env | sort | redact_env_dump >&2
+	echo "=== end environment ===" >&2
+}
+
+print_commit_env_hints() {
+	echo "--- Commit / deploy related (safe preview) ---" >&2
+	local n
+	for n in SERVER_COMMIT_SHA GITHUB_SHA SOURCE_COMMIT COOLIFY_BRANCH COOLIFY_FQDN; do
+		if [[ -n "${!n:-}" ]]; then
+			echo "${n}=<set, length ${#!n}>" >&2
+		else
+			echo "${n}=<unset>" >&2
+		fi
+	done
+	echo "--- Other env names matching COOLIFY|GITHUB|SOURCE|GIT|COMMIT (values redacted) ---" >&2
+	# shellcheck disable=SC2046
+	env | sort | grep -iE '^(COOLIFY|GITHUB|SOURCE|GIT|COMMIT)' | redact_env_dump >&2 || true
+	echo "--- end hints ---" >&2
+}
+
+if entrypoint_debug_env; then
+	dump_all_env_sorted
+fi
+
 # Pause between polls when the right workflow or artifact is not ready yet.
 WAIT_SECONDS="${INITIAL_WAIT_SECONDS:-30}"
 MAX_ATTEMPTS="${INSTALL_MAX_ATTEMPTS:-120}"
@@ -19,6 +57,11 @@ if [[ -z "$WANT_SHA_RAW" ]]; then
 	echo "No commit SHA in environment. Set one of: SERVER_COMMIT_SHA, GITHUB_SHA, or SOURCE_COMMIT (Coolify)."
 	echo "Coolify: use runtime SOURCE_COMMIT=\$SOURCE_COMMIT in the UI. Ensure compose does not set SOURCE_COMMIT: \${SOURCE_COMMIT:-} (that forces empty and overrides Coolify)."
 	echo "Local: add GITHUB_SHA to .env (see docker-compose env_file) or export before compose up."
+	echo "Tip: set ENTRYPOINT_DEBUG_ENV=1 on a successful path to dump env at every container start (tokens redacted)."
+	print_commit_env_hints
+	echo "=== Full environment (sorted, sensitive values redacted) — missing commit SHA ===" >&2
+	env | sort | redact_env_dump >&2
+	echo "=== end ===" >&2
 	exit 1
 fi
 WANT_SHA="$(echo "$WANT_SHA_RAW" | tr '[:upper:]' '[:lower:]')"

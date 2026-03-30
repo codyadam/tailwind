@@ -13,6 +13,7 @@
 # Coolify: enable runtime SOURCE_COMMIT=$SOURCE_COMMIT in the UI. Do not set SOURCE_COMMIT: ${SOURCE_COMMIT:-} in compose — empty compose interpolation overrides Coolify’s env_file and blanks the variable.
 #
 # Optional: ARTIFACT_MAX_AGE_SEC=0 when deploying an older commit; raise if CI usually takes >10m before the artifact exists.
+# Debug: add ENTRYPOINT_DEBUG_ENV=1 in Coolify (runtime only, do not put in compose with ${VAR:-}) to log full env on startup; tokens redacted.
 
 name: tailwind
 
