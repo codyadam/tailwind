@@ -1,4 +1,5 @@
-# Dedicated server: each start downloads server-arm64 for the deployed commit (SERVER_COMMIT_SHA, GITHUB_SHA, or Coolify SOURCE_COMMIT). Ignores older green runs on main. ARTIFACT_MAX_AGE_SEC (default 600) skips stale artifacts while waiting for the new workflow.
+# Dedicated server: each start downloads the newest successful `godot-ci.yml` artifact from `main`,
+# then installs it. ARTIFACT_MAX_AGE_SEC (default 600) skips stale artifacts while the new workflow is racing.
 # Requires: arm64 host (or QEMU) matching the exported binary.
 #
 # Create a classic PAT: https://github.com/settings/tokens — scope "repo" (private repos) or
@@ -7,13 +8,9 @@
 # Usage (local):
 #   export GITHUB_REPOSITORY=youruser/tailwind
 #   export GITHUB_TOKEN=ghp_...
-#   Put GITHUB_SHA=<full sha> (or SOURCE_COMMIT) in `.env` — optional env_file loads it into the container.
 #   docker compose up -d
 #
-# Coolify: enable runtime SOURCE_COMMIT=$SOURCE_COMMIT in the UI. Do not set SOURCE_COMMIT: ${SOURCE_COMMIT:-} in compose — empty compose interpolation overrides Coolify’s env_file and blanks the variable.
-#
-# Optional: ARTIFACT_MAX_AGE_SEC=0 when deploying an older commit; raise if CI usually takes >10m before the artifact exists.
-# Debug: add ENTRYPOINT_DEBUG_ENV=1 in Coolify (runtime only, do not put in compose with ${VAR:-}) to log full env on startup; tokens redacted.
+# Optional: ARTIFACT_MAX_AGE_SEC=0 disables the staleness filter (useful for deploying older artifacts on purpose).
 
 name: tailwind
 
@@ -26,11 +23,7 @@ services:
     restart: unless-stopped
     ports:
       - "4242:4242/tcp"
-    env_file:
-      - path: .env
-        required: false
     environment:
-      # Do not set GITHUB_SHA / SOURCE_COMMIT here with ${VAR:-} — that interpolates empty and overrides Coolify’s runtime env_file. Set commit SHA in Coolify UI or a local `.env` used by Compose.
       - GITHUB_REPOSITORY=${GITHUB_REPOSITORY:?Set GITHUB_REPOSITORY}
       - GITHUB_TOKEN=${GITHUB_TOKEN:?Set GITHUB_TOKEN}
       - ARTIFACT_MAX_AGE_SEC=${ARTIFACT_MAX_AGE_SEC:-600}
