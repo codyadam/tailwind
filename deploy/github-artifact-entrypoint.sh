@@ -17,8 +17,8 @@ TOKEN="${GITHUB_TOKEN:?Set GITHUB_TOKEN with repo scope (actions:read for privat
 WANT_SHA_RAW="${SERVER_COMMIT_SHA:-${GITHUB_SHA:-${SOURCE_COMMIT:-}}}"
 if [[ -z "$WANT_SHA_RAW" ]]; then
 	echo "No commit SHA in environment. Set one of: SERVER_COMMIT_SHA, GITHUB_SHA, or SOURCE_COMMIT (Coolify)."
-	echo "Local: GITHUB_SHA=\$(git rev-parse HEAD) docker compose up -d"
-	echo "Coolify: add SOURCE_COMMIT to this service (Environment Variables) or enable passing it to the running container."
+	echo "Coolify: use runtime SOURCE_COMMIT=\$SOURCE_COMMIT in the UI. Ensure compose does not set SOURCE_COMMIT: \${SOURCE_COMMIT:-} (that forces empty and overrides Coolify)."
+	echo "Local: add GITHUB_SHA to .env (see docker-compose env_file) or export before compose up."
 	exit 1
 fi
 WANT_SHA="$(echo "$WANT_SHA_RAW" | tr '[:upper:]' '[:lower:]')"

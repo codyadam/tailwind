@@ -4,13 +4,13 @@
 # Create a classic PAT: https://github.com/settings/tokens — scope "repo" (private repos) or
 # fine-grained: Actions read + Contents read on this repository.
 #
-# Usage:
+# Usage (local):
 #   export GITHUB_REPOSITORY=youruser/tailwind
 #   export GITHUB_TOKEN=ghp_...
-#   export GITHUB_SHA=$(git rev-parse HEAD)   # or SERVER_COMMIT_SHA
+#   Put GITHUB_SHA=<full sha> (or SOURCE_COMMIT) in `.env` — optional env_file loads it into the container.
 #   docker compose up -d
 #
-# Coolify: add a runtime env var SOURCE_COMMIT=$SOURCE_COMMIT (predefined; see Environment Variables docs). Leave “Runtime” enabled so the entrypoint sees the deploy commit.
+# Coolify: enable runtime SOURCE_COMMIT=$SOURCE_COMMIT in the UI. Do not set SOURCE_COMMIT: ${SOURCE_COMMIT:-} in compose — empty compose interpolation overrides Coolify’s env_file and blanks the variable.
 #
 # Optional: ARTIFACT_MAX_AGE_SEC=0 when deploying an older commit; raise if CI usually takes >10m before the artifact exists.
 
@@ -25,15 +25,16 @@ services:
     restart: unless-stopped
     ports:
       - "4242:4242/tcp"
+    env_file:
+      - path: .env
+        required: false
     environment:
-      GITHUB_REPOSITORY: ${GITHUB_REPOSITORY}
-      GITHUB_TOKEN: ${GITHUB_TOKEN}
-      GITHUB_SHA: ${GITHUB_SHA:-}
-      SERVER_COMMIT_SHA: ${SERVER_COMMIT_SHA:-}
-      SOURCE_COMMIT: ${SOURCE_COMMIT:-}
-      ARTIFACT_MAX_AGE_SEC: ${ARTIFACT_MAX_AGE_SEC:-600}
-      INITIAL_WAIT_SECONDS: ${INITIAL_WAIT_SECONDS:-30}
-      INSTALL_MAX_ATTEMPTS: ${INSTALL_MAX_ATTEMPTS:-120}
+      # Do not set GITHUB_SHA / SOURCE_COMMIT here with ${VAR:-} — that interpolates empty and overrides Coolify’s runtime env_file. Set commit SHA in Coolify UI or a local `.env` used by Compose.
+      - GITHUB_REPOSITORY=${GITHUB_REPOSITORY:?Set GITHUB_REPOSITORY}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:?Set GITHUB_TOKEN}
+      - ARTIFACT_MAX_AGE_SEC=${ARTIFACT_MAX_AGE_SEC:-600}
+      - INITIAL_WAIT_SECONDS=${INITIAL_WAIT_SECONDS:-30}
+      - INSTALL_MAX_ATTEMPTS=${INSTALL_MAX_ATTEMPTS:-120}
     volumes:
       - server_data:/opt/server
 
