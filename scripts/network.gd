@@ -1,6 +1,6 @@
 extends Node
-
-const PORT: int = 4242
+const DEV_PORT: int = 4242
+const PROD_PORT: int = 443
 const PRODUCTION_HOST: String = "tailwindserver.cody.dev"
 const DEFAULT_PLAYER_SPAWN: Vector2 = Vector2(-183, 62)
 ## Horizontal gap between players so joiners do not spawn inside existing CharacterBody2D colliders (avoids moving-platform / snap bugs, see godot#91005).
@@ -65,7 +65,7 @@ func _is_loopback_host(host: String) -> bool:
 	return h == "127.0.0.1" or h == "localhost" or h == "::1"
 
 
-## Full WebSocket URL for [method connect_to_game_server]. Override with `--server-url=wss://host:4242`.
+## Full WebSocket URL for [method connect_to_game_server]. Override with `--server-url=wss://host:443`.
 ## Browsers on HTTPS need `wss://` to a TLS-terminated endpoint; plain `ws://` is fine for local/desktop tests.
 func resolve_client_url() -> String:
 	for a in OS.get_cmdline_user_args():
@@ -73,10 +73,12 @@ func resolve_client_url() -> String:
 			return a.get_slice("=", 1).strip_edges()
 	var host := resolve_server_host()
 	var scheme := "ws"
+	var port := DEV_PORT
 	if OS.has_feature("web") and not _is_loopback_host(host):
 		scheme = "wss"
+		port = PROD_PORT
 	var h := _host_for_websocket_url(host)
-	return "%s://%s:%d" % [scheme, h, PORT]
+	return "%s://%s:%d" % [scheme, h, port]
 
 
 func go_offline() -> void:
@@ -89,12 +91,12 @@ func go_offline() -> void:
 func start_server() -> void:
 	go_offline()
 	var wsm := WebSocketMultiplayerPeer.new()
-	if wsm.create_server(PORT) != OK:
+	if wsm.create_server(DEV_PORT) != OK:
 		push_error("Failed to start server")
 		return
 	multiplayer.multiplayer_peer = wsm
 	multiplayer.server_relay = true
-	print("Server running WebSocket on port ", PORT)
+	print("Server running WebSocket on port ", DEV_PORT)
 
 
 func connect_to_game_server() -> void:
