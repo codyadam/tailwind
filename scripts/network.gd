@@ -1,7 +1,7 @@
 extends Node
 const DEV_PORT: int = 4242
 const PROD_PORT: int = 443
-const PRODUCTION_HOST: String = "tailwindserver.cody.dev"
+const PRODUCTION_HOST: String = "tailwindserver.codya.dev"
 const DEFAULT_PLAYER_SPAWN: Vector2 = Vector2(-183, 62)
 ## Horizontal gap between players so joiners do not spawn inside existing CharacterBody2D colliders (avoids moving-platform / snap bugs, see godot#91005).
 const PLAYER_SPAWN_SPACING_X: float = 72.0
