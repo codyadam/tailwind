@@ -167,4 +167,6 @@ if [[ -z "$PCK_FALLBACK" ]]; then
 	echo "No .pck next to ${BINARY} and no *.pck in /opt/server."
 	exit 1
 fi
-exec "$BINARY" --main-pack "$PCK_FALLBACK" "$@"
+
+echo "Starting server... ($BINARY)"
+exec "$BINARY"
