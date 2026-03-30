@@ -23,8 +23,9 @@ print_commit_env_hints() {
 	echo "--- Commit / deploy related (safe preview) ---" >&2
 	local n
 	for n in SERVER_COMMIT_SHA GITHUB_SHA SOURCE_COMMIT COOLIFY_BRANCH COOLIFY_FQDN; do
-		if [[ -n "${!n:-}" ]]; then
-			echo "${n}=<set, length ${#!n}>" >&2
+		local val="${!n:-}"
+		if [[ -n "$val" ]]; then
+			echo "${n}=<set, length ${#val}>" >&2
 		else
 			echo "${n}=<unset>" >&2
 		fi
