@@ -12,3 +12,4 @@ WORKDIR /opt/server
 RUN ./dl.sh
 
 # CMD ["./server-arm64"]
+CMD ["tail", "-f", "/dev/null"] 
