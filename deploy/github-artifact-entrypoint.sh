@@ -35,7 +35,10 @@ TOKEN="${GITHUB_TOKEN:?Set GITHUB_TOKEN with repo scope (actions:read for privat
 mkdir -p /opt/server
 
 server_binary() {
-	find /opt/server -maxdepth 1 -type f -name '*.arm64' 2>/dev/null | head -1
+	# Godot "Linux Server" .zip exports typically produce an executable whose filename
+	# is the zip basename (e.g. server-arm64) plus a sibling pack (e.g. server-arm64.pck).
+	# So we select any top-level file except packs/archives.
+	find /opt/server -maxdepth 1 -type f ! -name '*.pck' ! -name '*.zip' 2>/dev/null | head -1
 }
 
 install_from_github() {
@@ -148,7 +151,7 @@ fi
 
 BINARY="$(server_binary)"
 if [[ -z "$BINARY" ]]; then
-	echo "No *.arm64 binary under /opt/server after install."
+	echo "No server executable under /opt/server after install."
 	find /opt/server -type f || true
 	exit 1
 fi
