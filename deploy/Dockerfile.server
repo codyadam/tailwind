@@ -11,4 +11,4 @@ WORKDIR /opt/server
 
 RUN ./dl.sh
 
-ENTRYPOINT ["./server-arm64"]
+# CMD ["./server-arm64"]
