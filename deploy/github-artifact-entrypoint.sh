@@ -159,14 +159,10 @@ chmod +x "$BINARY"
 
 PCK="${BINARY}.pck"
 if [[ -f "$PCK" ]]; then
+	echo "Starting server... ($BINARY)"
 	exec "$BINARY" "$@"
+	echo "Server stopped."
 fi
 
-PCK_FALLBACK="$(find /opt/server -maxdepth 1 -type f -name '*.pck' | head -1)"
-if [[ -z "$PCK_FALLBACK" ]]; then
-	echo "No .pck next to ${BINARY} and no *.pck in /opt/server."
-	exit 1
-fi
-
-echo "Starting server... ($BINARY)"
-exec "$BINARY"
+echo "No .pck next to ${BINARY} and no *.pck in /opt/server."
+exit 1
