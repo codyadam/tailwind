@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://diparly1twk40"]
 
-[ext_resource type="Script" uid="uid://chuerm6v08iej" path="res://scripts/player-movements.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://chuerm6v08iej" path="res://scripts/player.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://dlhh5d3f6q1iv" path="res://scripts/abilities/build.gd" id="2_g2els"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gyfs4"]
 radius = 30.0
@@ -52,3 +53,8 @@ remote_path = NodePath("../../../MainCam")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=174566772]
 replication_config = SubResource("SceneReplicationConfig_3vyb7")
+
+[node name="Abilities" type="Node" parent="." unique_id=2047556738]
+
+[node name="Build" type="Node" parent="Abilities" unique_id=855851528]
+script = ExtResource("2_g2els")

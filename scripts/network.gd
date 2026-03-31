@@ -1,4 +1,5 @@
 extends Node
+
 const DEV_PORT: int = 4242
 const PROD_PORT: int = 443
 const PRODUCTION_HOST: String = "tailwindserver.codya.dev"
@@ -132,12 +133,14 @@ func _on_server_disconnected() -> void:
 
 
 func _on_peer_connected(peer_id: int) -> void:
+	Events.server_player_joined.emit(peer_id)
 	if not multiplayer.is_server():
 		return
 	_spawn_player_for_peer(peer_id)
 
 
 func _on_peer_disconnected(peer_id: int) -> void:
+	Events.server_player_left.emit(peer_id)
 	if not multiplayer.is_server():
 		return
 	var n := get_node_or_null(str(peer_id))

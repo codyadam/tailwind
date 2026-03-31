@@ -17,7 +17,7 @@ config/icon="res://assets/icon.svg"
 
 [autoload]
 
-AgentDebugLog="*res://scripts/agent_debug_log.gd"
+Events="*uid://cpsjv2f4rskrm"
 
 [display]
 

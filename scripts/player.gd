@@ -110,14 +110,9 @@ func _is_controlling_locally() -> bool:
 func _refresh_camera_remote_transforms() -> void:
 	var mct := $MainCamTransform as RemoteTransform2D
 	var oct := $OtherCamTransform as RemoteTransform2D
-	var follow := _is_controlling_locally()
-	if follow:
-		# Player lives under Main Scene / Network / Player — three parents up to scene root where MainCam and VP0 live.
+	if _is_controlling_locally():
 		mct.remote_path = NodePath("../../../MainCam")
 		oct.remote_path = NodePath("../../../VP0/OtherCam")
-	else:
-		mct.remote_path = NodePath("")
-		oct.remote_path = NodePath("")
 
 
 func _do_reset() -> void:
