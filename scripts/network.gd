@@ -39,25 +39,28 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_connected_to_server() -> void:
 	print("Connected to server")
+	Events.on_connected.emit()
 
 
 func _on_connection_failed() -> void:
 	push_warning("Connection to game server failed")
+	Events.on_disconnected.emit()
 	go_offline()
 
 
 func _on_server_disconnected() -> void:
+	Events.on_disconnected.emit()
 	go_offline()
 
 func _on_peer_connected(peer_id: int) -> void:
-	Events.server_player_joined.emit(peer_id)
+	Events.on_server_player_joined.emit(peer_id)
 	if not multiplayer.is_server():
 		return
 	_spawn_player_for_peer(peer_id)
 
 
 func _on_peer_disconnected(peer_id: int) -> void:
-	Events.server_player_left.emit(peer_id)
+	Events.on_server_player_left.emit(peer_id)
 	if not multiplayer.is_server():
 		return
 	var n := get_node_or_null(str(peer_id))

@@ -25,11 +25,11 @@ func _process(_delta: float) -> void:
 	var is_empty := tilemap.get_cell_tile_data(map_coords) == null
 
 	if place_block and is_empty:
+		tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, terrain_id)
 		_request_place_block.rpc_id(1, map_coords)
-		_place_block(map_coords)
 	elif remove_block and not is_empty:
+		tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, -1)
 		_request_remove_block.rpc_id(1, map_coords)
-		_remove_block(map_coords)
 
 
 @rpc("any_peer", "call_remote", "unreliable")
