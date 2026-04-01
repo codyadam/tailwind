@@ -43,7 +43,7 @@ func _on_connected_to_server() -> void:
 
 
 func _on_connection_failed() -> void:
-	push_warning("Connection to game server failed")
+	print("Connection to game server failed")
 	Events.on_disconnected.emit()
 	go_offline()
 
@@ -71,6 +71,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 #region offline mode
 
 func go_offline() -> void:
+	print("Going offline")
 	var peer := multiplayer.multiplayer_peer
 	if peer and not (peer is OfflineMultiplayerPeer):
 		_clear_spawned_players()
@@ -84,10 +85,8 @@ func _toggle_offline_mode() -> void:
 	var peer := multiplayer.multiplayer_peer
 	if peer and not (peer is OfflineMultiplayerPeer):
 		go_offline()
-		print("Offline mode enabled")
 		return
 	connect_to_game_server()
-	print("Offline mode disabled, reconnecting")
 
 
 #region initializing
