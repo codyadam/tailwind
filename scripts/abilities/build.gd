@@ -3,7 +3,7 @@ extends Node
 @export var terrain_set_id: int = 0
 @export var terrain_id: int = 0
 
-@onready var tilemap: TileMapLayer = $"/root/MainScene/Terrain/TileMapLayer"
+@onready var tilemap: TileMapLayer = $"/root/Main/Terrain/TileMapLayer"
 @onready var player: Player = $"../.."
 
 
@@ -14,7 +14,6 @@ func _process(_delta: float) -> void:
 		return
 
 	if not tilemap:
-		print("Tilemap not found", tilemap, $"/root/MainScene/Terrain/TileMapLayer")
 		return
 
 	if player and not player._is_controlling_locally():
