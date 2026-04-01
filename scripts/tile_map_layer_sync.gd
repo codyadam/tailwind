@@ -29,6 +29,7 @@ func _override_tilemap(tiles_positions: Array[Vector2i]) -> void:
 	var sender = multiplayer.get_remote_sender_id()
 	if sender != get_multiplayer_authority():
 		return
+	print("Syncing tilemap")
 	clear()
 	for pos in tiles_positions:
 		set_cells_terrain_connect([pos], terrain_set_id, terrain_id)

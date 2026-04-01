@@ -32,11 +32,11 @@ func _process(_delta: float) -> void:
 		_remove_block(map_coords)
 
 
-@rpc("any_peer", "call_remote", "reliable")
+@rpc("any_peer", "call_remote", "unreliable")
 func _request_place_block(map_coords: Vector2i) -> void:
 	_place_block.rpc(map_coords)
 
-@rpc("any_peer", "call_local", "reliable")
+@rpc("any_peer", "call_local", "unreliable")
 func _place_block(map_coords: Vector2i) -> void:
 	if multiplayer.get_remote_sender_id() != 1 and multiplayer.get_remote_sender_id() != get_multiplayer_authority():
 		return
@@ -44,11 +44,11 @@ func _place_block(map_coords: Vector2i) -> void:
 		return
 	tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, terrain_id)
 
-@rpc("any_peer", "call_remote", "reliable")
+@rpc("any_peer", "call_remote", "unreliable")
 func _request_remove_block(map_coords: Vector2i) -> void:
 	_remove_block.rpc(map_coords)
 
-@rpc("any_peer", "call_local", "reliable")
+@rpc("any_peer", "call_local", "unreliable")
 func _remove_block(map_coords: Vector2i) -> void:
 	if multiplayer.get_remote_sender_id() != 1 and multiplayer.get_remote_sender_id() != get_multiplayer_authority():
 		return

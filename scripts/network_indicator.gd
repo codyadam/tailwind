@@ -20,7 +20,10 @@ func _update_status_label() -> void:
 	var emoji := "🔴"
 	var state_text := "Offline"
 
-	if multiplayer.is_server() and peer and not (peer is OfflineMultiplayerPeer):
+	if multiplayer.is_server() and peer is OfflineMultiplayerPeer:
+		emoji = "🔴"
+		state_text = "Offline"
+	elif multiplayer.is_server() and peer:
 		emoji = "🟢"
 		state_text = "Online (Host)"
 	elif status == MultiplayerPeer.CONNECTION_CONNECTED:

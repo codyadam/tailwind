@@ -15,19 +15,17 @@
 [ext_resource type="Shader" uid="uid://cuuob08u7m8oi" path="res://shaders/oil-shader.gdshader" id="9_hdxc3"]
 [ext_resource type="Shader" uid="uid://c6bb4cjonetg4" path="res://shaders/kuwahara-shader.gdshader" id="9_lmiho"]
 [ext_resource type="Texture2D" uid="uid://b2x7qj0kylhkh" path="res://assets/platformer4.png" id="12_xqs1w"]
-[ext_resource type="PackedScene" uid="uid://dhlqbj16est0a" path="res://scenes/scene_switcher.tscn" id="14_ojl2q"]
 [ext_resource type="Texture2D" uid="uid://b5ekv4ywkw7nd" path="res://assets/platformer.png" id="16_3u53g"]
 [ext_resource type="Texture2D" uid="uid://dh2dcjx2t2l6l" path="res://assets/platformer2.png" id="17_xqs1w"]
 [ext_resource type="Texture2D" uid="uid://d0vhet6vu3onm" path="res://assets/platformer3.png" id="18_854uo"]
 [ext_resource type="FontFile" uid="uid://cns567ailcpgj" path="res://assets/NotoColorEmoji-Regular.ttf" id="19_854uo"]
-[ext_resource type="PackedScene" uid="uid://v1ytb458s7g0" path="res://scenes/performance_saver.tscn" id="21_ht068"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ht068"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wj4up"]
 shader = ExtResource("8_7u122")
 shader_parameter/blur_sigma = 2.00000002980238
-shader_parameter/blur_spread = 1.0009999776954999
+shader_parameter/blur_spread = 1.0009999776955
 shader_parameter/noise_scale = 0.03000000072648
 shader_parameter/noise_offset = Vector2(0, 0)
 shader_parameter/distort_strength = 0.0029999999241
@@ -304,7 +302,3 @@ Toggle shaders using keyboard keys:
 1 - Blur
 2 - Voronoi
 3 - Kuwahara"
-
-[node name="SceneSwitcher" parent="." unique_id=1897061740 instance=ExtResource("14_ojl2q")]
-
-[node name="PerformanceSaver" parent="." unique_id=115034881 instance=ExtResource("21_ht068")]

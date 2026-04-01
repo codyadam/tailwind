@@ -18,6 +18,9 @@ config/icon="res://assets/icon.svg"
 [autoload]
 
 Events="*uid://cpsjv2f4rskrm"
+PerformanceSaver="*uid://bod7rbasqmb65"
+SceneSwitcher="*uid://cq1rjfuul3u5x"
+Globals="*uid://ywn6ye3fa14a"
 
 [display]
 

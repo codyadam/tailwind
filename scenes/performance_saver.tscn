@@ -1,6 +1,0 @@
-[gd_scene format=3 uid="uid://v1ytb458s7g0"]
-
-[ext_resource type="Script" uid="uid://bod7rbasqmb65" path="res://scripts/performance_saver.gd" id="1_4wciu"]
-
-[node name="PerformanceSaver" type="Node" unique_id=115034881]
-script = ExtResource("1_4wciu")

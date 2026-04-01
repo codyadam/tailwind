@@ -14,11 +14,9 @@
 [ext_resource type="Shader" uid="uid://cuuob08u7m8oi" path="res://shaders/oil-shader.gdshader" id="11_ymqqf"]
 [ext_resource type="Shader" uid="uid://c6bb4cjonetg4" path="res://shaders/kuwahara-shader.gdshader" id="12_2og3l"]
 [ext_resource type="Script" uid="uid://ckb06oqj7n7uf" path="res://scripts/sub_viewport_mirror_world.gd" id="13_6x2wg"]
-[ext_resource type="PackedScene" uid="uid://dhlqbj16est0a" path="res://scenes/scene_switcher.tscn" id="14_df2i4"]
 [ext_resource type="FontFile" uid="uid://cns567ailcpgj" path="res://assets/NotoColorEmoji-Regular.ttf" id="14_jd3ld"]
 [ext_resource type="Script" uid="uid://6n7j7e05thsj" path="res://scripts/network_indicator.gd" id="15_wnrm0"]
 [ext_resource type="Script" uid="uid://bu5uxij3lvq3r" path="res://scripts/network.gd" id="16_m6iqd"]
-[ext_resource type="PackedScene" uid="uid://v1ytb458s7g0" path="res://scenes/performance_saver.tscn" id="18_x2117"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mo76n"]
 
@@ -554,7 +552,7 @@ tile_set = SubResource("TileSet_gyfs4")
 script = ExtResource("7_4lxb2")
 
 [node name="Timer" type="Timer" parent="Terrain/TileMapLayer" unique_id=1818425912]
-wait_time = 30.0
+wait_time = 10.0
 autostart = true
 ignore_time_scale = true
 
@@ -677,7 +675,7 @@ Shift - Dash toward mouse
 Space - Jump
 Left Click - Place block
 Right Click - Remove block 
-
+Escape - Toggle Online/Offline
 
 CTRL + 1 ➡️ Game online scene
 CTRL + 2 ➡️ Demo shader scene"
@@ -701,13 +699,8 @@ text = "Online 🟢"
 horizontal_alignment = 2
 script = ExtResource("15_wnrm0")
 
-[node name="SceneSwitcher" parent="." unique_id=1897061740 instance=ExtResource("14_df2i4")]
-
 [node name="Network" type="Node" parent="." unique_id=1243303630]
 script = ExtResource("16_m6iqd")
 
-[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1374940070]
-_spawnable_scenes = PackedStringArray("uid://diparly1twk40")
-spawn_path = NodePath("../Network")
-
-[node name="PerformanceSaver" parent="." unique_id=115034881 instance=ExtResource("18_x2117")]
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Network" unique_id=1374940070]
+spawn_path = NodePath("..")
