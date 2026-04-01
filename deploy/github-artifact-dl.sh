@@ -31,6 +31,7 @@ MAX_ATTEMPTS="${INSTALL_MAX_ATTEMPTS:-120}"
 ARTIFACT_MAX_AGE_SEC="${ARTIFACT_MAX_AGE_SEC:-600}"
 REPO="${GITHUB_REPOSITORY:?Set GITHUB_REPOSITORY to owner/repo}"
 TOKEN="${GITHUB_TOKEN:?Set GITHUB_TOKEN with repo scope (actions:read for private repos)}"
+TARGET_BRANCH="${TARGET_BRANCH:-main}"
 
 mkdir -p /opt/server
 
@@ -44,11 +45,14 @@ server_binary() {
 install_from_github() {
 	local run_id="$1"
 	local artifact_id="$2"
+	local download_url="https://api.github.com/repos/${REPO}/actions/artifacts/${artifact_id}/zip"
+	echo "Downloading artifact id=${artifact_id} from run=${run_id}..."
+	echo "Artifact download URL: ${download_url}"
 	rm -rf /tmp/artex
 	mkdir -p /tmp/artex
 	if ! curl -sSL -f -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
 		-o /tmp/artifact.zip \
-		"https://api.github.com/repos/${REPO}/actions/artifacts/${artifact_id}/zip"; then
+		"${download_url}"; then
 		rm -rf /tmp/artex /tmp/artifact.zip
 		return 1
 	fi
@@ -96,20 +100,39 @@ while [[ "$attempt" -lt "$MAX_ATTEMPTS" ]]; do
 	sleep "$WAIT_SECONDS"
 	echo "Starting artifact check (attempt ${attempt}/${MAX_ATTEMPTS})..."
 
+	BRANCH_JSON="$(
+		curl -sS -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
+			"https://api.github.com/repos/${REPO}/branches/${TARGET_BRANCH}"
+	)"
+	TARGET_SHA="$(
+		echo "$BRANCH_JSON" | jq -r '.commit.sha // empty'
+	)"
+	if [[ -z "$TARGET_SHA" ]]; then
+		echo "Could not resolve ${TARGET_BRANCH} HEAD SHA yet (attempt ${attempt}/${MAX_ATTEMPTS}); sleeping ${WAIT_SECONDS}s..."
+		continue
+	fi
+
 	RUNS_JSON="$(
 		curl -sS -H "Authorization: Bearer ${TOKEN}" -H "Accept: application/vnd.github+json" \
-			"https://api.github.com/repos/${REPO}/actions/workflows/godot-ci.yml/runs?branch=main&status=success&per_page=50"
+			"https://api.github.com/repos/${REPO}/actions/workflows/godot-ci.yml/runs?branch=${TARGET_BRANCH}&status=completed&event=push&per_page=50"
 	)"
 
-	# Newest successful run on main (by updated_at).
+	# Newest successful run that matches the current branch HEAD commit.
 	RUN_ID="$(
 		echo "$RUNS_JSON" | jq -r '
-			(.workflow_runs | sort_by(.updated_at) | reverse | .[0].id) // empty
+			[
+				.workflow_runs[]
+				| select(.conclusion == "success")
+				| select(.head_sha == "'"${TARGET_SHA}"'")
+			]
+			| sort_by(.updated_at)
+			| reverse
+			| .[0].id // empty
 		'
 	)"
 
 	if [[ -z "$RUN_ID" ]]; then
-		echo "No successful godot-ci.yml run on main yet (attempt ${attempt}/${MAX_ATTEMPTS}); sleeping ${WAIT_SECONDS}s..."
+		echo "No successful godot-ci.yml run for ${TARGET_BRANCH} HEAD ${TARGET_SHA} yet (attempt ${attempt}/${MAX_ATTEMPTS}); sleeping ${WAIT_SECONDS}s..."
 		continue
 	fi
 
@@ -121,14 +144,21 @@ while [[ "$attempt" -lt "$MAX_ATTEMPTS" ]]; do
 	ARTIFACT_ID="$(
 		echo "$ART_JSON" | jq -r '.artifacts[] | select(.name == "server-arm64") | .id' | head -1
 	)"
+	ARTIFACT_NAME="$(
+		echo "$ART_JSON" | jq -r '.artifacts[] | select(.name == "server-arm64") | .name' | head -1
+	)"
 	ARTIFACT_CREATED="$(
 		echo "$ART_JSON" | jq -r '.artifacts[] | select(.name == "server-arm64") | .created_at' | head -1
+	)"
+	ARTIFACT_SIZE="$(
+		echo "$ART_JSON" | jq -r '.artifacts[] | select(.name == "server-arm64") | .size_in_bytes' | head -1
 	)"
 
 	if [[ -z "$ARTIFACT_ID" ]]; then
 		echo "Run ${RUN_ID} has no server-arm64 artifact yet (attempt ${attempt}/${MAX_ATTEMPTS}); sleeping ${WAIT_SECONDS}s..."
 		continue
 	fi
+	echo "Found artifact in run ${RUN_ID}: name=${ARTIFACT_NAME} id=${ARTIFACT_ID} created_at=${ARTIFACT_CREATED} size_bytes=${ARTIFACT_SIZE}"
 
 	if ! artifact_age_ok "$ARTIFACT_CREATED"; then
 		echo "Run ${RUN_ID} artifact is older than ${ARTIFACT_MAX_AGE_SEC}s (stale vs clock); waiting for a fresher build (attempt ${attempt}/${MAX_ATTEMPTS})."

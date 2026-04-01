@@ -4,12 +4,10 @@ RUN apt-get update \
 	&& apt-get install -y --no-install-recommends bash curl ca-certificates jq unzip \
 	&& rm -rf /var/lib/apt/lists/*
 
-COPY deploy/github-artifact-dl.sh /opt/server/dl.sh
-RUN chmod +x /opt/server/dl.sh
+COPY deploy/github-artifact-dl.sh /opt/bootstrap/dl.sh
+RUN chmod +x /opt/bootstrap/dl.sh
 
 WORKDIR /opt/server
 
-RUN ./dl.sh
-
-CMD ["./server-arm64"]
+CMD ["bash", "-lc", "/opt/bootstrap/dl.sh && exec ./server-arm64"]
 # CMD ["tail", "-f", "/dev/null"] 
