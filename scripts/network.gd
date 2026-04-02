@@ -14,10 +14,10 @@ const PLAYER_SCENE: PackedScene = preload("res://scenes/player.tscn")
 
 func _ready() -> void:
 	spawner.spawn_function = _spawn_function
-	multiplayer.connected_to_server.connect(_on_connected_to_server)
+	multiplayer.connected_to_server.connect(_after_connected_to_server)
 	multiplayer.connection_failed.connect(_on_connection_failed)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
-	if Globals.is_dedicated_server():
+	if Utils.is_dedicated_server():
 		multiplayer.peer_connected.connect(_on_peer_connected)
 		multiplayer.peer_disconnected.connect(_on_peer_disconnected)
 		start_server()
@@ -30,37 +30,37 @@ func _exit_tree() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if Globals.is_dedicated_server():
+	if Utils.is_dedicated_server():
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 		_toggle_offline_mode()
 		get_viewport().set_input_as_handled()
 
 
-func _on_connected_to_server() -> void:
+func _after_connected_to_server() -> void:
 	print("Connected to server")
-	Events.on_connected.emit()
+	Events.after_connected.emit()
 
 
 func _on_connection_failed() -> void:
 	print("Connection to game server failed")
-	Events.on_disconnected.emit()
+	Events.after_disconnected.emit()
 	go_offline()
 
 
 func _on_server_disconnected() -> void:
-	Events.on_disconnected.emit()
+	Events.after_disconnected.emit()
 	go_offline()
 
 func _on_peer_connected(peer_id: int) -> void:
-	Events.on_server_player_joined.emit(peer_id)
+	Events.after_server_player_joined.emit(peer_id)
 	if not multiplayer.is_server():
 		return
 	_spawn_player_for_peer(peer_id)
 
 
 func _on_peer_disconnected(peer_id: int) -> void:
-	Events.on_server_player_left.emit(peer_id)
+	Events.after_server_player_left.emit(peer_id)
 	if not multiplayer.is_server():
 		return
 	var n := get_node_or_null(str(peer_id))
@@ -77,7 +77,7 @@ func go_offline() -> void:
 		_clear_spawned_players()
 		peer.close()
 	multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
-	if not Globals.is_dedicated_server():
+	if not Utils.is_dedicated_server():
 		_spawn_player_for_peer(multiplayer.get_unique_id())
 
 
@@ -92,7 +92,7 @@ func _toggle_offline_mode() -> void:
 #region initializing
 
 func connect_to_game_server() -> void:
-	if Globals.is_dedicated_server():
+	if Utils.is_dedicated_server():
 		return
 	var existing := multiplayer.multiplayer_peer
 	if existing and not (existing is OfflineMultiplayerPeer):

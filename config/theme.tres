@@ -1,0 +1,14 @@
+[gd_resource type="Theme" format=3 uid="uid://dc7ixvkxvgs0v"]
+
+[ext_resource type="FontFile" uid="uid://cns567ailcpgj" path="res://assets/NotoColorEmoji-Regular.ttf" id="1_17x56"]
+
+[sub_resource type="FontVariation" id="FontVariation_wruvh"]
+fallbacks = Array[Font]([ExtResource("1_17x56")])
+
+[resource]
+default_font = SubResource("FontVariation_wruvh")
+default_font_size = 24
+Label/colors/font_color = Color(1, 1, 1, 1)
+Label/colors/font_outline_color = Color(0, 0, 0, 0.6156863)
+Label/constants/outline_size = 10
+Label/font_sizes/font_size = 24

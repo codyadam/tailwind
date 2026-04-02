@@ -2,6 +2,9 @@
 
 [ext_resource type="Script" uid="uid://chuerm6v08iej" path="res://scripts/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dlhh5d3f6q1iv" path="res://scripts/abilities/build.gd" id="2_g2els"]
+[ext_resource type="Script" uid="uid://c0to42l53xi4t" path="res://scripts/ability_manager.gd" id="2_qlg0r"]
+[ext_resource type="Script" uid="uid://dcgj2fix6qmb5" path="res://scripts/abilities/hook.gd" id="3_qhqgy"]
+[ext_resource type="Script" uid="uid://cnt2uy7udrp4" path="res://scripts/ability_label.gd" id="5_tuyoq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gyfs4"]
 radius = 30.0
@@ -21,6 +24,22 @@ properties/2/replication_mode = 1
 properties/3/path = NodePath(".:velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
+properties/4/path = NodePath("Abilities/Hook/Tip:position")
+properties/4/spawn = true
+properties/4/replication_mode = 2
+
+[sub_resource type="Gradient" id="Gradient_qlg0r"]
+offsets = PackedFloat32Array(0.4686907, 0.6793169, 0.6850095)
+colors = PackedColorArray(0.46, 0.46, 0.46, 0, 0.12963998, 0.123900004, 0.21, 0.078431375, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_tuyoq"]
+gradient = SubResource("Gradient_qlg0r")
+width = 500
+height = 500
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_dqkch"]
 
 [node name="Player" type="CharacterBody2D" unique_id=223307406]
 script = ExtResource("1_3vyb7")
@@ -41,6 +60,7 @@ shape = SubResource("CircleShape2D_gyfs4")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1756089236]
 modulate = Color(0.87957054, 0.4390033, 0.18702641, 1)
+z_index = 1
 position = Vector2(-3.0398369e-06, 8.344649e-07)
 scale = Vector2(60, 59.999996)
 texture = SubResource("PlaceholderTexture2D_d5x1h")
@@ -54,7 +74,53 @@ remote_path = NodePath("../../../MainCam")
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=174566772]
 replication_config = SubResource("SceneReplicationConfig_3vyb7")
 
-[node name="Abilities" type="Node" parent="." unique_id=2047556738]
+[node name="Abilities" type="Node2D" parent="." unique_id=299777456 node_paths=PackedStringArray("default_ability")]
+script = ExtResource("2_qlg0r")
+default_ability = NodePath("Build")
 
-[node name="Build" type="Node" parent="Abilities" unique_id=855851528]
+[node name="Build" type="Node2D" parent="Abilities" unique_id=1860759571]
 script = ExtResource("2_g2els")
+
+[node name="Hook" type="Node2D" parent="Abilities" unique_id=233275380]
+script = ExtResource("3_qhqgy")
+rest_length = 20.0
+
+[node name="Hint" type="Sprite2D" parent="Abilities/Hook" unique_id=581606667]
+scale = Vector2(3.416, 3.4160004)
+texture = SubResource("GradientTexture2D_tuyoq")
+
+[node name="Tip" type="Sprite2D" parent="Abilities/Hook" unique_id=2137897529]
+modulate = Color(0.51550007, 0.49, 1, 1)
+scale = Vector2(20, 20)
+texture = SubResource("PlaceholderTexture2D_dqkch")
+
+[node name="Line" type="Line2D" parent="Abilities/Hook" unique_id=924497060]
+points = PackedVector2Array(0, 0, 0, 0)
+default_color = Color(1, 0.19999999, 0.37333333, 1)
+joint_mode = 2
+end_cap_mode = 2
+
+[node name="RayCast2D" type="RayCast2D" parent="Abilities/Hook" unique_id=1793951121]
+target_position = Vector2(835, 3)
+collision_mask = 3
+hit_from_inside = true
+
+[node name="AbilityLabel" type="Label" parent="." unique_id=1717434937 node_paths=PackedStringArray("ability_manager")]
+z_index = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -33.5
+offset_top = -32.0
+offset_right = 33.5
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "🔨"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("5_tuyoq")
+ability_manager = NodePath("../Abilities")

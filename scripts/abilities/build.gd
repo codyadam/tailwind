@@ -1,4 +1,4 @@
-extends Node
+extends Ability
 
 @export var terrain_set_id: int = 0
 @export var terrain_id: int = 0
@@ -6,6 +6,8 @@ extends Node
 @onready var tilemap: TileMapLayer = $"/root/Main/Terrain/TileMapLayer"
 @onready var player: Player = $"../.."
 
+var label: String = "🔨"
+var controls_helper_text: String = "Left Click - Place block\nRight Click - Remove block"
 
 func _process(_delta: float) -> void:
 	var place_block := Input.is_action_pressed("game_primary")

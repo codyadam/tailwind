@@ -20,12 +20,22 @@ config/icon="res://assets/icon.svg"
 Events="*uid://cpsjv2f4rskrm"
 PerformanceSaver="*uid://bod7rbasqmb65"
 SceneSwitcher="*uid://cq1rjfuul3u5x"
-Globals="*uid://ywn6ye3fa14a"
+DebugMenu="*uid://cggqb75a8w8r"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg")
+
+[gui]
+
+theme/custom="uid://dc7ixvkxvgs0v"
 
 [input]
 
