@@ -106,7 +106,7 @@ func _refresh_camera_remote_transforms() -> void:
 	if follow:
 		# Player lives under Main Scene / Network / Player — three parents up to scene root where MainCam and VP0 live.
 		mct.remote_path = NodePath("../../../MainCam")
-		oct.remote_path = NodePath("../../../VP0/OtherCam")
+		oct.remote_path = NodePath("../../../Minimap/MinimapCam")
 	else:
 		mct.remote_path = NodePath("")
 		oct.remote_path = NodePath("")
