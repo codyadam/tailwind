@@ -9,6 +9,7 @@ extends Ability
 var label: String = "🔨"
 var controls_helper_text: String = "Left Click - Place block\nRight Click - Remove block"
 
+
 func _process(_delta: float) -> void:
 	var place_block := Input.is_action_pressed("game_primary")
 	var remove_block := Input.is_action_pressed("game_secondary")
@@ -25,34 +26,21 @@ func _process(_delta: float) -> void:
 	var map_coords := tilemap.local_to_map(tilemap.to_local(mouse_world))
 	var is_empty := tilemap.get_cell_tile_data(map_coords) == null
 
+	var offline := multiplayer.multiplayer_peer is OfflineMultiplayerPeer
+
 	if place_block and is_empty:
-		tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, terrain_id)
-		_request_place_block.rpc_id(1, map_coords)
+		if offline:
+			tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, terrain_id)
+		elif multiplayer.is_server():
+			tilemap.server_apply_build(map_coords, true, multiplayer.get_unique_id())
+		else:
+			tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, terrain_id)
+			tilemap.client_request_place.rpc_id(1, map_coords)
 	elif remove_block and not is_empty:
-		tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, -1)
-		_request_remove_block.rpc_id(1, map_coords)
-
-
-@rpc("any_peer", "call_local", "unreliable")
-func _request_place_block(map_coords: Vector2i) -> void:
-	_place_block.rpc(map_coords)
-
-@rpc("any_peer", "call_local", "unreliable")
-func _place_block(map_coords: Vector2i) -> void:
-	if multiplayer.get_remote_sender_id() != 1 and multiplayer.get_remote_sender_id() != get_multiplayer_authority():
-		return
-	if tilemap == null:
-		return
-	tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, terrain_id)
-
-@rpc("any_peer", "call_local", "unreliable")
-func _request_remove_block(map_coords: Vector2i) -> void:
-	_remove_block.rpc(map_coords)
-
-@rpc("any_peer", "call_local", "unreliable")
-func _remove_block(map_coords: Vector2i) -> void:
-	if multiplayer.get_remote_sender_id() != 1 and multiplayer.get_remote_sender_id() != get_multiplayer_authority():
-		return
-	if tilemap == null:
-		return
-	tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, -1)
+		if offline:
+			tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, -1)
+		elif multiplayer.is_server():
+			tilemap.server_apply_build(map_coords, false, multiplayer.get_unique_id())
+		else:
+			tilemap.set_cells_terrain_connect([map_coords], terrain_set_id, -1)
+			tilemap.client_request_remove.rpc_id(1, map_coords)
