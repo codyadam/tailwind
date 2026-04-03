@@ -14,10 +14,12 @@
 [ext_resource type="Script" uid="uid://6n7j7e05thsj" path="res://scripts/network_indicator.gd" id="15_wnrm0"]
 [ext_resource type="Script" uid="uid://bu5uxij3lvq3r" path="res://scripts/network.gd" id="16_m6iqd"]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_df2i4"]
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d5x1h"]
 shader = ExtResource("5_m6iqd")
 shader_parameter/jitter_strength = 5.000000074506
-shader_parameter/corner_snap = 1.5000000712500001
+shader_parameter/corner_snap = 1.50000007125
 shader_parameter/jitter_seed = 0.0
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_w6bki"]
@@ -454,9 +456,33 @@ shader_parameter/color = Color(0.1254902, 0.18431373, 0.49411765, 0.87058824)
 shader_parameter/no_texture = 0
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_df2i4"]
-viewport_path = NodePath("VP0")
+viewport_path = NodePath("Minimap")
 
 [node name="Main" type="Node2D" unique_id=1358111768]
+
+[node name="FluidSim" type="SubViewportContainer" parent="." unique_id=938177742]
+material = SubResource("ShaderMaterial_df2i4")
+offset_left = -7112.0
+offset_top = -744.0
+offset_right = -1690.0
+offset_bottom = 2277.0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="FluidSim" unique_id=860837224]
+handle_input_locally = false
+size = Vector2i(5422, 3021)
+render_target_clear_mode = 2
+render_target_update_mode = 4
+
+[node name="ColorRect" type="ColorRect" parent="FluidSim/SubViewport" unique_id=1283736644]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3492.0
+offset_top = -155.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.93, 0.93, 0.80910003, 0.007843138)
 
 [node name="Terrain" type="Node2D" parent="." unique_id=1462008662]
 
@@ -540,7 +566,7 @@ limit_top = 0
 limit_right = 1152
 limit_bottom = 648
 
-[node name="VP0" type="SubViewport" parent="." unique_id=639256772]
+[node name="Minimap" type="SubViewport" parent="." unique_id=639256772]
 disable_3d = true
 handle_input_locally = false
 canvas_cull_mask = 4294967293
@@ -548,7 +574,7 @@ size = Vector2i(350, 350)
 render_target_update_mode = 4
 script = ExtResource("13_6x2wg")
 
-[node name="OtherCam" type="Camera2D" parent="VP0" unique_id=1606573101]
+[node name="MinimapCam" type="Camera2D" parent="Minimap" unique_id=1606573101]
 position = Vector2(-183.06, 62)
 zoom = Vector2(0.04, 0.04)
 limit_enabled = false

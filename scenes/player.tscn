@@ -5,6 +5,7 @@
 [ext_resource type="Script" uid="uid://c0to42l53xi4t" path="res://scripts/ability_manager.gd" id="2_qlg0r"]
 [ext_resource type="Script" uid="uid://dcgj2fix6qmb5" path="res://scripts/abilities/hook.gd" id="3_qhqgy"]
 [ext_resource type="Script" uid="uid://cnt2uy7udrp4" path="res://scripts/ability_label.gd" id="5_tuyoq"]
+[ext_resource type="Script" uid="uid://eqadfh013inl" path="res://scripts/fluid_actor.gd" id="6_tuyoq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gyfs4"]
 radius = 30.0
@@ -40,6 +41,15 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_dqkch"]
+
+[sub_resource type="Gradient" id="Gradient_tuyoq"]
+offsets = PackedFloat32Array(0.47299814, 0.6927374)
+colors = PackedColorArray(0.94, 0.31584004, 0.15980001, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fjrip"]
+gradient = SubResource("Gradient_tuyoq")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [node name="Player" type="CharacterBody2D" unique_id=223307406]
 script = ExtResource("1_3vyb7")
@@ -124,3 +134,11 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("5_tuyoq")
 ability_manager = NodePath("../Abilities")
+
+[node name="FluidActor" type="Node2D" parent="." unique_id=886251256]
+z_index = 5
+script = ExtResource("6_tuyoq")
+sprite_texture = SubResource("GradientTexture2D_fjrip")
+sprite_scale = Vector2(3, 3)
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="FluidActor" unique_id=446710450]
