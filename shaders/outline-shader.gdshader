@@ -4,7 +4,7 @@ shader_type canvas_item;
 /// Thickness in viewport pixels (stable under scale & non-square sprites).
 uniform float width_px : hint_range(0.0, 64.0, 0.5) = 2.0;
 uniform vec4 color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
-uniform int no_texture : hint_range(0, 1, 1) = 0;
+uniform bool no_texture = false;
 
 void vertex() {
 	// Called for every vertex the material is visible on.
@@ -21,13 +21,13 @@ void fragment() {
 
 	
 	if (outside) {
-		if (no_texture == 0) {
+		if (!no_texture) {
 			COLOR = color + texture(TEXTURE, UV);
 		} else {
 			COLOR = color;
 		}
 	} else {
-		if (no_texture == 0) {
+		if (!no_texture) {
 			COLOR = texture(TEXTURE, UV);
 		} else {
 			COLOR = vec4(0.0, 0.0, 0.0, 0.0);

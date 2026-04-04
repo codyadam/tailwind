@@ -3,12 +3,12 @@ extends Node
 const DEV_PORT: int = 4242
 const PROD_PORT: int = 443
 const PRODUCTION_HOST: String = "tailwindserver.codya.dev"
-const DEFAULT_PLAYER_SPAWN: Vector2 = Vector2(0, 0)
 const PLAYER_SPAWN_SPACING_X: float = 72.0
 
 const PLAYER_SCENE: PackedScene = preload("res://scenes/player.tscn")
 
 @onready var spawner: MultiplayerSpawner = $MultiplayerSpawner
+@onready var player_spawn_point: Node2D = $MultiplayerSpawner/SpawnPoint
 
 #region handlers
 
@@ -121,7 +121,7 @@ func _clear_spawned_players() -> void:
 func _spawn_function(peer_id: int) -> Node:
 	var p: Node = PLAYER_SCENE.instantiate()
 	p.name = str(peer_id)
-	p.global_position = DEFAULT_PLAYER_SPAWN
+	p.global_position = player_spawn_point.global_position
 	p.set_multiplayer_authority(peer_id, true)
 	return p
 

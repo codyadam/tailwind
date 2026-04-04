@@ -1,7 +1,9 @@
 [gd_scene format=4 uid="uid://811m6bl8xxjs"]
 
+[ext_resource type="Shader" uid="uid://b5i5hek2hbwe1" path="res://shaders/displacement.gdshader" id="1_df2i4"]
 [ext_resource type="Texture2D" uid="uid://do4tokav81teq" path="res://assets/placeholder4.png" id="1_ep8eu"]
 [ext_resource type="Texture2D" uid="uid://bjchgv44ibc6l" path="res://assets/placeholder.jpg" id="2_df2i4"]
+[ext_resource type="Texture2D" uid="uid://ddoklaeg13pqs" path="res://assets/grid.png" id="4_jd3ld"]
 [ext_resource type="Texture2D" uid="uid://br014ieius72j" path="res://assets/placeholder3.png" id="4_m6iqd"]
 [ext_resource type="Shader" uid="uid://0fx10q65hhp4" path="res://shaders/tile-shader.gdshader" id="5_m6iqd"]
 [ext_resource type="Script" uid="uid://btuanwxaiexoa" path="res://scripts/tile_map_layer_sync.gd" id="7_4lxb2"]
@@ -13,8 +15,6 @@
 [ext_resource type="Script" uid="uid://ckb06oqj7n7uf" path="res://scripts/sub_viewport_mirror_world.gd" id="13_6x2wg"]
 [ext_resource type="Script" uid="uid://6n7j7e05thsj" path="res://scripts/network_indicator.gd" id="15_wnrm0"]
 [ext_resource type="Script" uid="uid://bu5uxij3lvq3r" path="res://scripts/network.gd" id="16_m6iqd"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_df2i4"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d5x1h"]
 shader = ExtResource("5_m6iqd")
@@ -430,7 +430,7 @@ shader_parameter/noise_time_scale = 0.0
 shader = ExtResource("8_4lxb2")
 shader_parameter/width_px = 4.0
 shader_parameter/color = Color(0.8, 0.13600002, 0.13600002, 0.5921569)
-shader_parameter/no_texture = 1
+shader_parameter/no_texture = false
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_qwutr"]
 size = Vector2(4, 4)
@@ -449,40 +449,29 @@ shader_parameter/canvas_scale = Vector2(0.4, 0.4)
 shader_parameter/radius = 3
 shader_parameter/edge_clamp = 0.0
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_df2i4"]
+shader = ExtResource("1_df2i4")
+shader_parameter/rg_mul = Vector2(2, 2)
+shader_parameter/rg_add = Vector2(-1, -1)
+shader_parameter/flow_swizzle = Vector2(1, 1)
+shader_parameter/blue_mix = 0.0
+shader_parameter/blue_scale = 2.0
+shader_parameter/displacement_px = 188.0
+shader_parameter/advect_steps = 1
+shader_parameter/trail_sharpness = 2.0
+shader_parameter/edge_clamp = 0.002
+shader_parameter/debug_show_texture = false
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ep8eu"]
 shader = ExtResource("8_4lxb2")
 shader_parameter/width_px = 14.5
 shader_parameter/color = Color(0.1254902, 0.18431373, 0.49411765, 0.87058824)
-shader_parameter/no_texture = 0
+shader_parameter/no_texture = false
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_df2i4"]
 viewport_path = NodePath("Minimap")
 
 [node name="Main" type="Node2D" unique_id=1358111768]
-
-[node name="FluidSim" type="SubViewportContainer" parent="." unique_id=938177742]
-material = SubResource("ShaderMaterial_df2i4")
-offset_left = -7112.0
-offset_top = -744.0
-offset_right = -1690.0
-offset_bottom = 2277.0
-stretch = true
-
-[node name="SubViewport" type="SubViewport" parent="FluidSim" unique_id=860837224]
-handle_input_locally = false
-size = Vector2i(5422, 3021)
-render_target_clear_mode = 2
-render_target_update_mode = 4
-
-[node name="ColorRect" type="ColorRect" parent="FluidSim/SubViewport" unique_id=1283736644]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -3492.0
-offset_top = -155.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.93, 0.93, 0.80910003, 0.007843138)
 
 [node name="Terrain" type="Node2D" parent="." unique_id=1462008662]
 
@@ -491,6 +480,11 @@ visibility_layer = 2
 
 [node name="Placeholder5" type="Sprite2D" parent="Terrain/Images" unique_id=2032121799]
 position = Vector2(5699, -1319)
+scale = Vector2(1.75747, 1.75747)
+texture = ExtResource("1_ep8eu")
+
+[node name="Placeholder6" type="Sprite2D" parent="Terrain/Images" unique_id=1095252124]
+position = Vector2(-9281, 463)
 scale = Vector2(1.75747, 1.75747)
 texture = ExtResource("1_ep8eu")
 
@@ -503,6 +497,16 @@ texture = ExtResource("2_df2i4")
 position = Vector2(5179, -354)
 scale = Vector2(1.2581018, 1.2581018)
 texture = ExtResource("4_m6iqd")
+
+[node name="Placeholder7" type="Sprite2D" parent="Terrain/Images" unique_id=1533363065]
+position = Vector2(-9408, 1690)
+scale = Vector2(1.2581018, 1.2581018)
+texture = ExtResource("4_m6iqd")
+
+[node name="Grid" type="Sprite2D" parent="Terrain/Images" unique_id=2091521528]
+position = Vector2(-10364.751, 1931.7496)
+scale = Vector2(0.49391976, 0.49391976)
+texture = ExtResource("4_jd3ld")
 
 [node name="TileMapLayer" type="TileMapLayer" parent="Terrain" unique_id=1414708309]
 unique_name_in_owner = true
@@ -583,6 +587,30 @@ limit_top = 0
 limit_right = 1152
 limit_bottom = 648
 
+[node name="BackBufferCopy" type="BackBufferCopy" parent="." unique_id=914258809]
+
+[node name="FluidSim" type="SubViewportContainer" parent="." unique_id=938177742]
+material = SubResource("ShaderMaterial_df2i4")
+offset_left = -10609.0
+offset_top = -759.0
+offset_right = -1685.0
+offset_bottom = 2262.0
+stretch = true
+
+[node name="SubViewport" type="SubViewport" parent="FluidSim" unique_id=860837224]
+handle_input_locally = false
+size = Vector2i(8924, 3021)
+render_target_clear_mode = 2
+render_target_update_mode = 4
+
+[node name="ColorRect" type="ColorRect" parent="FluidSim/SubViewport" unique_id=1283736644]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5019608, 0.5019608, 0.5019608, 0.019607844)
+
 [node name="UI" type="CanvasLayer" parent="." unique_id=727071273]
 
 [node name="Control" type="Control" parent="UI" unique_id=795970275]
@@ -645,3 +673,6 @@ script = ExtResource("16_m6iqd")
 
 [node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="Network" unique_id=1374940070]
 spawn_path = NodePath("..")
+
+[node name="SpawnPoint" type="Node2D" parent="Network/MultiplayerSpawner" unique_id=1622141489]
+position = Vector2(-9290, 854)

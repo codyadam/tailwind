@@ -43,8 +43,8 @@ fill_from = Vector2(0.5, 0.5)
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_dqkch"]
 
 [sub_resource type="Gradient" id="Gradient_tuyoq"]
-offsets = PackedFloat32Array(0.47299814, 0.6927374)
-colors = PackedColorArray(0.94, 0.31584004, 0.15980001, 1, 1, 1, 1, 0)
+offsets = PackedFloat32Array(0, 0.6927374)
+colors = PackedColorArray(1, 1, 1, 1, 0.5019608, 0.5019608, 0.5019608, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_fjrip"]
 gradient = SubResource("Gradient_tuyoq")
@@ -140,5 +140,7 @@ z_index = 5
 script = ExtResource("6_tuyoq")
 sprite_texture = SubResource("GradientTexture2D_fjrip")
 sprite_scale = Vector2(3, 3)
+min_speed_invisible = 800.0
+max_speed_for_alpha = 2000.0
 
 [node name="RemoteTransform2D" type="RemoteTransform2D" parent="FluidActor" unique_id=446710450]

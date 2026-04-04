@@ -51,7 +51,7 @@ func _on_server_player_joined(peer_id: int) -> void:
 	var nw := get_node_or_null("/root/Main/Network") as Node
 	if nw == null:
 		return
-	var spawn: Vector2 = nw.get("DEFAULT_PLAYER_SPAWN") as Vector2
+	var spawn: Vector2 = nw.player_spawn_point.global_position
 	var center_tile := local_to_map(to_local(spawn))
 	_server_send_snapshots_around_tile(peer_id, center_tile)
 
