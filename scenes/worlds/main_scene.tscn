@@ -15,10 +15,8 @@
 [ext_resource type="Shader" uid="uid://c6bb4cjonetg4" path="res://shaders/kuwahara-shader.gdshader" id="12_2og3l"]
 [ext_resource type="Script" uid="uid://ckb06oqj7n7uf" path="res://scripts/sub_viewport_mirror_world.gd" id="13_6x2wg"]
 [ext_resource type="Script" uid="uid://6n7j7e05thsj" path="res://scripts/network_indicator.gd" id="15_wnrm0"]
+[ext_resource type="Script" uid="uid://b8po1atukvhie" path="res://scripts/chat_input.gd" id="16_88oj7"]
 [ext_resource type="Script" uid="uid://bu5uxij3lvq3r" path="res://scripts/network.gd" id="16_m6iqd"]
-[ext_resource type="Texture2D" uid="uid://chifgdp3l1v4m" path="res://assets/cursors/Outline/arrow_e.svg" id="17_88oj7"]
-[ext_resource type="Texture2D" uid="uid://coga6um7nl4qp" path="res://assets/cursors/Outline/pointer_b.svg" id="18_x2117"]
-[ext_resource type="Texture2D" uid="uid://baelhb6ebto11" path="res://assets/cursors/Outline/pointer_c.svg" id="19_4lxb2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_d5x1h"]
 shader = ExtResource("5_m6iqd")
@@ -714,6 +712,22 @@ text = "Online 🟢"
 vertical_alignment = 2
 script = ExtResource("15_wnrm0")
 
+[node name="ChatInput" type="LineEdit" parent="UI/Control" unique_id=2061219451]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -202.0
+offset_top = -62.0
+offset_right = 198.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+placeholder_text = "Your message"
+script = ExtResource("16_88oj7")
+
 [node name="Network" type="Node" parent="." unique_id=1243303630]
 script = ExtResource("16_m6iqd")
 
@@ -722,15 +736,3 @@ spawn_path = NodePath("..")
 
 [node name="SpawnPoint" type="Node2D" parent="Network/MultiplayerSpawner" unique_id=1622141489]
 position = Vector2(48, -210)
-
-[node name="ArrowE" type="Sprite2D" parent="." unique_id=378395688]
-position = Vector2(1135, 412)
-texture = ExtResource("17_88oj7")
-
-[node name="PointerB" type="Sprite2D" parent="." unique_id=824942297]
-position = Vector2(994, 450)
-texture = ExtResource("18_x2117")
-
-[node name="PointerC" type="Sprite2D" parent="." unique_id=1929045682]
-position = Vector2(993, 526)
-texture = ExtResource("19_4lxb2")

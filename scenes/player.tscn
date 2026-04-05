@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://b8o7a0ym4b5c4" path="res://assets/cursors/Outline/target_round_b.svg" id="5_fjrip"]
 [ext_resource type="Script" uid="uid://cnt2uy7udrp4" path="res://scripts/ability_label.gd" id="5_tuyoq"]
 [ext_resource type="Script" uid="uid://eqadfh013inl" path="res://scripts/fluid_actor.gd" id="6_tuyoq"]
+[ext_resource type="Script" uid="uid://cb0ac75iv2at7" path="res://scripts/proximity_chat.gd" id="7_smehm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gyfs4"]
 radius = 30.0
@@ -110,7 +111,9 @@ scale = Vector2(3.416, 3.4160004)
 texture = SubResource("GradientTexture2D_tuyoq")
 
 [node name="TargetHint" type="Sprite2D" parent="Abilities/Hook" unique_id=198155858]
+modulate = Color(1, 0.36, 0.36, 0.41960785)
 visibility_layer = 2048
+scale = Vector2(2, 2)
 texture = ExtResource("5_fjrip")
 
 [node name="Tip" type="Sprite2D" parent="Abilities/Hook" unique_id=2137897529]
@@ -153,6 +156,34 @@ vertical_alignment = 1
 script = ExtResource("5_tuyoq")
 ability_manager = NodePath("../Abilities")
 metadata/_edit_use_anchors_ = true
+
+[node name="ProximityChat" type="Label" parent="." unique_id=381038934 node_paths=PackedStringArray("player")]
+visibility_layer = 32768
+z_index = 1
+clip_contents = true
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -235.72
+offset_top = -161.0
+offset_right = 235.72
+offset_bottom = -49.410004
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "This is a placeholder message"
+horizontal_alignment = 1
+vertical_alignment = 2
+autowrap_mode = 3
+text_overrun_behavior = 4
+script = ExtResource("7_smehm")
+player = NodePath("..")
+metadata/_edit_use_anchors_ = true
+
+[node name="Timer" type="Timer" parent="ProximityChat" unique_id=70911935]
+wait_time = 4.0
 
 [node name="FluidActor" type="Node2D" parent="." unique_id=886251256]
 z_index = 5

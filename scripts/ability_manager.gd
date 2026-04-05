@@ -22,6 +22,8 @@ func switch_to_ability(ability_name: String) -> void:
     current_ability = next
     if current_ability != null:
         current_ability.activate()
+    elif player._is_controlling_locally():
+        Cursor.apply(Cursor.Kind.DEFAULT)
     Events.after_ability_switched.emit(current_ability, player)
     if current_ability:
         print("Ability: ", current_ability.label, " ",current_ability.name)
