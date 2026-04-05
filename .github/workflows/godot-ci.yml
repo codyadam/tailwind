@@ -49,8 +49,6 @@ jobs:
         env:
           COMMIT_SHA: ${{ github.sha }}
         run: |
-          set -euo pipefail
-
           COMMIT_DATE_ISO="$(date --iso-8601=seconds)"
 
           FILE="$GITHUB_WORKSPACE/build/web/index.html"
