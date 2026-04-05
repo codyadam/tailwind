@@ -140,7 +140,7 @@ func _physics_process(delta: float) -> void:
 	if not _is_controlling_locally():
 		return
 
-	if Input.is_action_just_pressed("game_reset"):
+	if not GlobalState.game_input_locked and Input.is_action_just_pressed("game_reset"):
 		_do_reset()
 
 	var on_floor := is_on_floor()
@@ -152,7 +152,7 @@ func _physics_process(delta: float) -> void:
 	_update_coyote(delta, on_floor)
 	_update_jump_buffer(delta)
 
-	var axis_x := Input.get_axis("game_left", "game_right")
+	var axis_x := 0.0 if GlobalState.game_input_locked else Input.get_axis("game_left", "game_right")
 	if axis_x != 0.0:
 		_facing_x = signf(axis_x)
 
@@ -179,8 +179,9 @@ func _physics_process(delta: float) -> void:
 func _update_fast_fall_squish(delta: float, on_floor: bool) -> void:
 	if not _sprite:
 		return
-	var x_mult := fast_fall_squish_x if (not on_floor and Input.is_action_pressed("game_down")) else 1.0
-	var y_mult := fast_fall_stretch_y if (not on_floor and Input.is_action_pressed("game_down")) else 1.0
+	var down_held := not GlobalState.game_input_locked and Input.is_action_pressed("game_down")
+	var x_mult := fast_fall_squish_x if (not on_floor and down_held) else 1.0
+	var y_mult := fast_fall_stretch_y if (not on_floor and down_held) else 1.0
 	var target := Vector2(_sprite_base_scale.x * x_mult, _sprite_base_scale.y * y_mult)
 	var step := fast_fall_squish_lerp * maxf(absf(_sprite_base_scale.x), absf(_sprite_base_scale.y)) * delta
 	_sprite.scale = _sprite.scale.move_toward(target, step)
@@ -211,7 +212,7 @@ func _update_coyote(delta: float, on_floor: bool) -> void:
 
 
 func _update_jump_buffer(delta: float) -> void:
-	if Input.is_action_just_pressed("game_jump"):
+	if not GlobalState.game_input_locked and Input.is_action_just_pressed("game_jump"):
 		_jump_buffer_timer = jump_buffer_time
 	_jump_buffer_timer = maxf(_jump_buffer_timer - delta, 0.0)
 
@@ -271,7 +272,7 @@ func _apply_gravity(delta: float, gravity: Vector2, on_floor: bool) -> void:
 		return
 	var g_hat := _gravity_unit(gravity)
 	var gmult := fall_gravity_multiplier if velocity.dot(g_hat) > 0.0 else 1.0
-	if Input.is_action_pressed("game_down"):
+	if not GlobalState.game_input_locked and Input.is_action_pressed("game_down"):
 		gmult *= down_input_gravity_multiplier
 	velocity += gravity * gmult * delta
 
@@ -285,12 +286,12 @@ func _try_consume_jump(on_floor: bool, on_wall: bool = false) -> void:
 
 
 func _apply_jump_cut() -> void:
-	if Input.is_action_just_released("game_jump") and velocity.y < 0.0:
+	if not GlobalState.game_input_locked and Input.is_action_just_released("game_jump") and velocity.y < 0.0:
 		velocity.y *= jump_cut_multiplier
 
 
 func _run_physics(delta: float, gravity: Vector2, on_floor: bool, axis_x: float) -> void:
-	if Input.is_action_just_pressed("game_dash") and _dash_available:
+	if not GlobalState.game_input_locked and Input.is_action_just_pressed("game_dash") and _dash_available:
 		_start_dash()
 		return
 
@@ -362,7 +363,7 @@ func _post_dash_physics(delta: float, gravity: Vector2, on_floor: bool, axis_x: 
 	_try_consume_jump(on_floor, _was_on_wall)
 	_apply_jump_cut()
 
-	if Input.is_action_just_pressed("game_dash") and _dash_available:
+	if not GlobalState.game_input_locked and Input.is_action_just_pressed("game_dash") and _dash_available:
 		_start_dash()
 		return
 

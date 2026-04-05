@@ -20,6 +20,8 @@ func on_deactivate() -> void:
 
 
 func _process(_delta: float) -> void:
+	if GlobalState.game_input_locked:
+		return
 	var place_block := Input.is_action_pressed("game_primary")
 	var remove_block := Input.is_action_pressed("game_secondary")
 	if not place_block and not remove_block:

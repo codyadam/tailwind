@@ -32,6 +32,8 @@ func _exit_tree() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if Utils.is_dedicated_server():
 		return
+	if GlobalState.game_input_locked:
+		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
 		_toggle_offline_mode()
 		get_viewport().set_input_as_handled()

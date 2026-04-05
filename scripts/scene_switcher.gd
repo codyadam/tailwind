@@ -1,6 +1,8 @@
 extends Node
 
 func _unhandled_input(event: InputEvent) -> void:
+	if GlobalState.game_input_locked:
+		return
 	if event is InputEventKey and event.pressed and event.ctrl_pressed:
 		match event.keycode:
 			KEY_1:

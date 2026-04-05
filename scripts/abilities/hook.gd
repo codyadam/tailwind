@@ -68,10 +68,11 @@ func _physics_process(delta: float) -> void:
 	ray.look_at(get_global_mouse_position())
 	ray.target_position = Vector2(max_range, 0.0)
 
-	if Input.is_action_just_pressed("game_secondary"):
-		launch()
-	if Input.is_action_just_released("game_secondary"):
-		retract()
+	if not GlobalState.game_input_locked:
+		if Input.is_action_just_pressed("game_secondary"):
+			launch()
+		if Input.is_action_just_released("game_secondary"):
+			retract()
 
 	if launched:
 		handle_grapple(delta)

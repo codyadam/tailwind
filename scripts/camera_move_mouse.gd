@@ -13,6 +13,9 @@ func _ready() -> void:
 	_prev_mouse_viewport = get_viewport().get_mouse_position()
 
 func _process(_delta: float) -> void:
+	if GlobalState.game_input_locked:
+		_prev_mouse_viewport = get_viewport().get_mouse_position()
+		return
 	if Input.is_action_just_pressed("game_zoom_in"):
 		_apply_zoom(zoom_step)
 	if Input.is_action_just_pressed("game_zoom_out"):

@@ -36,6 +36,8 @@ func switch_to_ability(ability_name: String) -> void:
 func _unhandled_input(event: InputEvent) -> void:
     if not player or not player._is_controlling_locally():
         return
+    if GlobalState.game_input_locked:
+        return
     if event is InputEventKey and event.pressed:
         match event.keycode:
             KEY_1:

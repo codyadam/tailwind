@@ -22,6 +22,7 @@ PerformanceSaver="*uid://bod7rbasqmb65"
 SceneSwitcher="*uid://cq1rjfuul3u5x"
 DebugMenu="*uid://cggqb75a8w8r"
 Cursor="*res://scripts/cursor.gd"
+GlobalState="*res://scripts/global_state.gd"
 
 [display]
 
