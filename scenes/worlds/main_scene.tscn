@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://btuanwxaiexoa" path="res://scripts/tile_map_layer_sync.gd" id="7_4lxb2"]
 [ext_resource type="Shader" uid="uid://gp1jeye4p8fk" path="res://shaders/test.gdshader" id="7_x2117"]
 [ext_resource type="Shader" uid="uid://yjp6rbn4qk28" path="res://shaders/outline-shader.gdshader" id="8_4lxb2"]
+[ext_resource type="Shader" uid="uid://bgkcnw8fmxtkp" path="res://shaders/add-color.gdshader" id="9_m6iqd"]
 [ext_resource type="Script" uid="uid://hgp8i2qbemmu" path="res://scripts/controls_helper.gd" id="11_ep8eu"]
 [ext_resource type="Shader" uid="uid://cuuob08u7m8oi" path="res://shaders/oil-shader.gdshader" id="11_ymqqf"]
 [ext_resource type="Shader" uid="uid://c6bb4cjonetg4" path="res://shaders/kuwahara-shader.gdshader" id="12_2og3l"]
@@ -430,10 +431,14 @@ shader_parameter/noise_time_scale = 0.0
 shader = ExtResource("8_4lxb2")
 shader_parameter/width_px = 4.0
 shader_parameter/color = Color(0.8, 0.13600002, 0.13600002, 0.5921569)
-shader_parameter/no_texture = false
+shader_parameter/no_texture = true
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_qwutr"]
 size = Vector2(4, 4)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_88oj7"]
+shader = ExtResource("9_m6iqd")
+shader_parameter/add_color = Color(0.40541998, 0.58, 0.3306, 0.22352941)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_66tet"]
 shader = ExtResource("11_ymqqf")
@@ -484,8 +489,8 @@ scale = Vector2(1.75747, 1.75747)
 texture = ExtResource("1_ep8eu")
 
 [node name="Placeholder6" type="Sprite2D" parent="Terrain/Images" unique_id=1095252124]
-position = Vector2(-9281, 463)
-scale = Vector2(1.75747, 1.75747)
+position = Vector2(-6156.0005, 974)
+scale = Vector2(4.721365, 4.7213645)
 texture = ExtResource("1_ep8eu")
 
 [node name="Placeholder" type="Sprite2D" parent="Terrain/Images" unique_id=1073395599]
@@ -516,7 +521,7 @@ tile_set = SubResource("TileSet_gyfs4")
 script = ExtResource("7_4lxb2")
 
 [node name="Timer" type="Timer" parent="Terrain/TileMapLayer" unique_id=1818425912]
-wait_time = 10.0
+wait_time = 120.0
 autostart = true
 ignore_time_scale = true
 
@@ -529,6 +534,21 @@ scale = Vector2(2278.3523, 2097.9998)
 texture = SubResource("PlaceholderTexture2D_hq1ik")
 
 [node name="Outline" type="Sprite2D" parent="Terrain/Shaders/BlurShader" unique_id=990592821]
+material = SubResource("ShaderMaterial_wr18j")
+scale = Vector2(0.25, 0.25)
+texture = SubResource("PlaceholderTexture2D_qwutr")
+metadata/_edit_lock_ = true
+
+[node name="BackBufferCopy2" type="BackBufferCopy" parent="Terrain/Shaders" unique_id=2114086473]
+copy_mode = 2
+
+[node name="BlurShader2" type="Sprite2D" parent="Terrain/Shaders/BackBufferCopy2" unique_id=1576723386]
+material = SubResource("ShaderMaterial_88oj7")
+position = Vector2(-858.99994, 1063)
+scale = Vector2(2278.3523, 2097.9998)
+texture = SubResource("PlaceholderTexture2D_hq1ik")
+
+[node name="Outline" type="Sprite2D" parent="Terrain/Shaders/BackBufferCopy2/BlurShader2" unique_id=148264218]
 material = SubResource("ShaderMaterial_wr18j")
 scale = Vector2(0.25, 0.25)
 texture = SubResource("PlaceholderTexture2D_qwutr")
@@ -588,6 +608,7 @@ limit_right = 1152
 limit_bottom = 648
 
 [node name="BackBufferCopy" type="BackBufferCopy" parent="." unique_id=914258809]
+copy_mode = 2
 
 [node name="FluidSim" type="SubViewportContainer" parent="." unique_id=938177742]
 material = SubResource("ShaderMaterial_df2i4")
@@ -675,4 +696,4 @@ script = ExtResource("16_m6iqd")
 spawn_path = NodePath("..")
 
 [node name="SpawnPoint" type="Node2D" parent="Network/MultiplayerSpawner" unique_id=1622141489]
-position = Vector2(-9290, 854)
+position = Vector2(48, -210)
