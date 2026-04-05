@@ -5,6 +5,16 @@ extends Node2D
 var is_active := false
 var owner_player: Player = null
 
+
+func _ready() -> void:
+    set_process(false)
+    set_physics_process(false)
+    set_process_input(false)
+    visible = false
+
+func _exit_tree() -> void:
+    deactivate()
+
 func setup(player: Player) -> void:
     owner_player = player
 
@@ -28,15 +38,8 @@ func deactivate() -> void:
     set_process_input(false)
     visible = false
 
-
 func on_activate() -> void:
     pass
 
 func on_deactivate() -> void:
     pass
-
-func _ready() -> void:
-    set_process(false)
-    set_physics_process(false)
-    set_process_input(false)
-    visible = false

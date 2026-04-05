@@ -45,7 +45,7 @@ func _unhandled_input(event: InputEvent) -> void:
             KEY_2:
                 switch_to_ability.rpc("Hook")
             KEY_3:
-                switch_to_ability.rpc("")
+                switch_to_ability.rpc("Pointer")
             KEY_4:
                 switch_to_ability.rpc("")
             KEY_5:

@@ -45,6 +45,8 @@ func on_deactivate() -> void:
 	Cursor.reset()
 
 func _process(_delta: float) -> void:
+	if not is_active:
+		return
 	line.set_point_position(1, tip.position)
 	if not owner_player._is_controlling_locally():
 		return
@@ -62,6 +64,8 @@ func _process(_delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not is_active:
+		return
 	if not owner_player or not owner_player._is_controlling_locally():
 		return
 

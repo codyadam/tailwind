@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://b8o7a0ym4b5c4" path="res://assets/cursors/Outline/target_round_b.svg" id="5_fjrip"]
 [ext_resource type="Script" uid="uid://cnt2uy7udrp4" path="res://scripts/ability_label.gd" id="5_tuyoq"]
 [ext_resource type="Script" uid="uid://eqadfh013inl" path="res://scripts/fluid_actor.gd" id="6_tuyoq"]
+[ext_resource type="Script" uid="uid://xxr7xcs0rb30" path="res://scripts/abilities/pointer.gd" id="6_y4r1p"]
+[ext_resource type="Texture2D" uid="uid://bvwov7doae8hx" path="res://assets/cursors/Outline/hand_point_n.svg" id="7_d2wvv"]
 [ext_resource type="Script" uid="uid://cb0ac75iv2at7" path="res://scripts/proximity_chat.gd" id="7_smehm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gyfs4"]
@@ -30,6 +32,12 @@ properties/3/replication_mode = 2
 properties/4/path = NodePath("Abilities/Hook/Tip:position")
 properties/4/spawn = true
 properties/4/replication_mode = 2
+properties/5/path = NodePath("Abilities/Pointer/Sprite:position")
+properties/5/spawn = true
+properties/5/replication_mode = 2
+properties/6/path = NodePath("Abilities/Pointer/Sprite:rotation")
+properties/6/spawn = true
+properties/6/replication_mode = 2
 
 [sub_resource type="Gradient" id="Gradient_qlg0r"]
 offsets = PackedFloat32Array(0.4686907, 0.6793169, 0.6850095)
@@ -80,6 +88,28 @@ position = Vector2(-3.0398369e-06, 8.344649e-07)
 scale = Vector2(60, 59.999996)
 texture = SubResource("PlaceholderTexture2D_d5x1h")
 
+[node name="AbilityLabel" type="Label" parent="." unique_id=1717434937 node_paths=PackedStringArray("ability_manager")]
+visibility_layer = 32768
+z_index = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -33.5
+offset_top = -32.0
+offset_right = 33.5
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "🔨"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("5_tuyoq")
+ability_manager = NodePath("../Abilities")
+metadata/_edit_use_anchors_ = true
+
 [node name="OtherCamTransform" type="RemoteTransform2D" parent="." unique_id=1133984166]
 visibility_layer = 1024
 remote_path = NodePath("../../../VP0/OtherCam")
@@ -113,7 +143,6 @@ texture = SubResource("GradientTexture2D_tuyoq")
 [node name="TargetHint" type="Sprite2D" parent="Abilities/Hook" unique_id=198155858]
 modulate = Color(1, 0.36, 0.36, 0.41960785)
 visibility_layer = 2048
-scale = Vector2(2, 2)
 texture = ExtResource("5_fjrip")
 
 [node name="Tip" type="Sprite2D" parent="Abilities/Hook" unique_id=2137897529]
@@ -135,27 +164,19 @@ target_position = Vector2(835, 3)
 collision_mask = 3
 hit_from_inside = true
 
-[node name="AbilityLabel" type="Label" parent="." unique_id=1717434937 node_paths=PackedStringArray("ability_manager")]
-visibility_layer = 32768
-z_index = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -33.5
-offset_top = -32.0
-offset_right = 33.5
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 32
-text = "🔨"
-horizontal_alignment = 1
-vertical_alignment = 1
-script = ExtResource("5_tuyoq")
-ability_manager = NodePath("../Abilities")
-metadata/_edit_use_anchors_ = true
+[node name="Pointer" type="Node2D" parent="Abilities" unique_id=517542179]
+visibility_layer = 2048
+position = Vector2(0, 1)
+script = ExtResource("6_y4r1p")
+velocity_damping = 0.99
+rotation_multiplier = Vector2(10, -5)
+
+[node name="Sprite" type="Sprite2D" parent="Abilities/Pointer" unique_id=39120234]
+visibility_layer = 2048
+z_index = 2
+position = Vector2(267.99997, -5.000001)
+scale = Vector2(1.4, 1.4)
+texture = ExtResource("7_d2wvv")
 
 [node name="ProximityChat" type="Label" parent="." unique_id=381038934 node_paths=PackedStringArray("player")]
 visibility_layer = 32768
