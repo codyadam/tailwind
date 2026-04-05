@@ -8,13 +8,17 @@ extends Ability
 @onready var line: Line2D = $Line
 @onready var ray: RayCast2D = $RayCast2D
 @onready var max_range: float = ray.target_position.length()
-@onready var hint: Sprite2D = $Hint
+@onready var range_hint: Sprite2D = $RangeHint
+@onready var target_hint: Sprite2D = $TargetHint
 
 var label: String = "🪝"
-var controls_helper_text: String = "Right Click - Hook"
+var controls_helper_text: String = "Right Click — hook walls or players (pulls them to you)"
 
 var launched: bool = false
 var _target: Vector2 = Vector2.ZERO
+var _hooked_player: Player = null
+
+var hook_cursor = load("res://assets/cursors/Outline/line_cross.svg")
 
 
 func setup(player: Player) -> void:
@@ -23,24 +27,42 @@ func setup(player: Player) -> void:
 		ray.clear_exceptions()
 		ray.add_exception(owner_player)
 
+	target_hint.visible = false
 	if owner_player._is_controlling_locally():
-		hint.visible = true
+		range_hint.visible = true
 	else:
-		hint.visible = false
+		range_hint.visible = false
+	Input.set_custom_mouse_cursor(hook_cursor, Input.CURSOR_CROSS, Vector2(32,32))
 
 
 func on_activate() -> void:
 	retract()
 	ray.enabled = true
+	Input.set_default_cursor_shape(Input.CURSOR_CROSS)
 
 
 
 func on_deactivate() -> void:
 	retract()
 	ray.enabled = false
+	Input.set_custom_mouse_cursor(null)
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
 func _process(_delta: float) -> void:
 	line.set_point_position(1, tip.position)
+	if not owner_player._is_controlling_locally():
+		return
+	if not launched:
+		# simulate the ray hitting the target to show the target hint
+		ray.look_at(get_global_mouse_position())
+		ray.force_raycast_update()
+		if ray.is_colliding():
+			target_hint.position = to_local(ray.get_collision_point())
+			target_hint.visible = true
+		else:
+			target_hint.visible = false
+	else:
+		target_hint.visible = false
 
 
 func _physics_process(delta: float) -> void:
@@ -63,17 +85,45 @@ func launch() -> void:
 	ray.force_raycast_update()
 	if ray.is_colliding():
 		launched = true
-		_target = ray.get_collision_point()
+		var collider := ray.get_collider()
+		if collider is Player and collider != owner_player:
+			_hooked_player = collider
+			_target = collider.global_position
+		else:
+			_hooked_player = null
+			_target = ray.get_collision_point()
 
 
 func retract() -> void:
 	launched = false
+	_hooked_player = null
 	_target = Vector2.ZERO
 	tip.position = Vector2.ZERO
 	line.points = PackedVector2Array([Vector2.ZERO, Vector2.ZERO])
 
 
 func handle_grapple(delta: float) -> void:
+	if _hooked_player != null and not is_instance_valid(_hooked_player):
+		retract()
+		return
+	if _hooked_player != null:
+		_target = _hooked_player.global_position
+		var grabber_pos := owner_player.global_position
+		var victim := _hooked_player
+		var to_grabber := victim.global_position.direction_to(grabber_pos)
+		var dist := victim.global_position.distance_to(grabber_pos)
+		var overhang := dist - rest_length
+		if overhang > 0.0:
+			var spring_force := to_grabber * (stiffness * overhang)
+			var vel_dot := victim.velocity.dot(to_grabber)
+			var damp_force := -damping * vel_dot * to_grabber
+			var impulse := (spring_force + damp_force) * delta
+			var auth := victim.get_multiplayer_authority()
+			if auth > 0 and auth != multiplayer.get_unique_id():
+				victim.apply_hook_pull.rpc_id(auth, impulse, grabber_pos, max_range)
+		tip.position = to_local(_target)
+		return
+
 	var target_dir := owner_player.global_position.direction_to(_target)
 	var target_dist := owner_player.global_position.distance_to(_target)
 	var displacement := target_dist - rest_length

@@ -99,6 +99,18 @@ func _is_controlling_locally() -> bool:
 	return multiplayer.get_unique_id() == get_multiplayer_authority()
 
 
+## Applied only on this player's authority when another player's hook pulls us toward them.
+@rpc("any_peer", "call_remote", "unreliable")
+func apply_hook_pull(impulse: Vector2, grabber_pos: Vector2, grab_range: float) -> void:
+	if not _is_controlling_locally():
+		return
+	if impulse.length_squared() > 2.56e8: # ~16k px/s per frame cap (misbehaving clients)
+		return
+	if global_position.distance_to(grabber_pos) > grab_range * 1.5:
+		return
+	velocity += impulse
+
+
 func _refresh_camera_remote_transforms() -> void:
 	var mct := $MainCamTransform as RemoteTransform2D
 	var oct := $OtherCamTransform as RemoteTransform2D

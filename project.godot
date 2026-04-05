@@ -27,6 +27,8 @@ DebugMenu="*uid://cggqb75a8w8r"
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/stretch/mode="canvas_items"
+mouse_cursor/custom_image="uid://coga6um7nl4qp"
+mouse_cursor/custom_image_hotspot=Vector2(20, 16)
 
 [editor_plugins]
 
@@ -130,6 +132,13 @@ game_zoom_out={
 "events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":16,"position":Vector2(466, 34),"global_position":Vector2(485, 130),"factor":0.9,"button_index":5,"canceled":false,"pressed":true,"double_click":false,"script":null)
 ]
 }
+
+[layer_names]
+
+2d_render/layer_1="background"
+2d_render/layer_6="map"
+2d_render/layer_11="entities"
+2d_render/layer_16="ui"
 
 [physics]
 

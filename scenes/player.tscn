@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://dlhh5d3f6q1iv" path="res://scripts/abilities/build.gd" id="2_g2els"]
 [ext_resource type="Script" uid="uid://c0to42l53xi4t" path="res://scripts/ability_manager.gd" id="2_qlg0r"]
 [ext_resource type="Script" uid="uid://dcgj2fix6qmb5" path="res://scripts/abilities/hook.gd" id="3_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://b8o7a0ym4b5c4" path="res://assets/cursors/Outline/target_round_b.svg" id="5_fjrip"]
 [ext_resource type="Script" uid="uid://cnt2uy7udrp4" path="res://scripts/ability_label.gd" id="5_tuyoq"]
 [ext_resource type="Script" uid="uid://eqadfh013inl" path="res://scripts/fluid_actor.gd" id="6_tuyoq"]
 
@@ -52,6 +53,7 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [node name="Player" type="CharacterBody2D" unique_id=223307406]
+visibility_layer = 31744
 script = ExtResource("1_3vyb7")
 max_run_speed = 550.0
 ground_friction = 2000.0
@@ -66,25 +68,30 @@ dash_duration = 0.2
 dash_spent_modulate = Color(1, 0.18416667, 0.110000014, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=114720810]
+visibility_layer = 1024
 shape = SubResource("CircleShape2D_gyfs4")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1756089236]
 modulate = Color(0.87957054, 0.4390033, 0.18702641, 1)
+visibility_layer = 1024
 z_index = 1
 position = Vector2(-3.0398369e-06, 8.344649e-07)
 scale = Vector2(60, 59.999996)
 texture = SubResource("PlaceholderTexture2D_d5x1h")
 
 [node name="OtherCamTransform" type="RemoteTransform2D" parent="." unique_id=1133984166]
+visibility_layer = 1024
 remote_path = NodePath("../../../VP0/OtherCam")
 
 [node name="MainCamTransform" type="RemoteTransform2D" parent="." unique_id=1269491718]
+visibility_layer = 1024
 remote_path = NodePath("../../../MainCam")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=174566772]
 replication_config = SubResource("SceneReplicationConfig_3vyb7")
 
 [node name="Abilities" type="Node2D" parent="." unique_id=299777456 node_paths=PackedStringArray("default_ability")]
+visibility_layer = 2048
 script = ExtResource("2_qlg0r")
 default_ability = NodePath("Build")
 
@@ -92,30 +99,41 @@ default_ability = NodePath("Build")
 script = ExtResource("2_g2els")
 
 [node name="Hook" type="Node2D" parent="Abilities" unique_id=233275380]
+light_mask = 0
+visibility_layer = 2048
 script = ExtResource("3_qhqgy")
 rest_length = 20.0
 
-[node name="Hint" type="Sprite2D" parent="Abilities/Hook" unique_id=581606667]
+[node name="RangeHint" type="Sprite2D" parent="Abilities/Hook" unique_id=581606667]
+visibility_layer = 2048
 scale = Vector2(3.416, 3.4160004)
 texture = SubResource("GradientTexture2D_tuyoq")
 
+[node name="TargetHint" type="Sprite2D" parent="Abilities/Hook" unique_id=198155858]
+visibility_layer = 2048
+texture = ExtResource("5_fjrip")
+
 [node name="Tip" type="Sprite2D" parent="Abilities/Hook" unique_id=2137897529]
 modulate = Color(0.51550007, 0.49, 1, 1)
+visibility_layer = 2048
 scale = Vector2(20, 20)
 texture = SubResource("PlaceholderTexture2D_dqkch")
 
 [node name="Line" type="Line2D" parent="Abilities/Hook" unique_id=924497060]
+visibility_layer = 2048
 points = PackedVector2Array(0, 0, 0, 0)
 default_color = Color(1, 0.19999999, 0.37333333, 1)
 joint_mode = 2
 end_cap_mode = 2
 
 [node name="RayCast2D" type="RayCast2D" parent="Abilities/Hook" unique_id=1793951121]
+visibility_layer = 2048
 target_position = Vector2(835, 3)
 collision_mask = 3
 hit_from_inside = true
 
 [node name="AbilityLabel" type="Label" parent="." unique_id=1717434937 node_paths=PackedStringArray("ability_manager")]
+visibility_layer = 32768
 z_index = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -134,6 +152,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 script = ExtResource("5_tuyoq")
 ability_manager = NodePath("../Abilities")
+metadata/_edit_use_anchors_ = true
 
 [node name="FluidActor" type="Node2D" parent="." unique_id=886251256]
 z_index = 5
