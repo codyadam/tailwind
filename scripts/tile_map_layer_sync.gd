@@ -6,8 +6,9 @@ const _SNAPSHOT_HEADER: int = 16 # 4x int32: cx, cy, version, hash
 
 @export var terrain_set_id: int = 0
 @export var terrain_id: int = 0
-@export var interest_radius_chunks: int = 2
-@export var interest_halo_chunks: int = 1
+## Chunk half-extent; total interest is (2 * (interest_radius_chunks + interest_halo_chunks) + 1)² chunks (default 3×3 = 9).
+@export var interest_radius_chunks: int = 1
+@export var interest_halo_chunks: int = 0
 ## Max chunk snapshots the server sends per frame (manifest response).
 @export_range(1, 32) var server_snapshots_per_frame: int = 4
 ## Max chunk snapshots the client applies per frame (avoids one-frame hitches).

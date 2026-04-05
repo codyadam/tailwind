@@ -168,7 +168,7 @@ hit_from_inside = true
 visibility_layer = 2048
 position = Vector2(0, 1)
 script = ExtResource("6_y4r1p")
-velocity_damping = 0.99
+velocity_damping = 0.82
 rotation_multiplier = Vector2(10, -5)
 
 [node name="Sprite" type="Sprite2D" parent="Abilities/Pointer" unique_id=39120234]

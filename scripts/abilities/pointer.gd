@@ -71,12 +71,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_change_texture.rpc((texture_index + 1) % textures.size())
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not is_active:
 		return
 	if owner_player._is_controlling_locally():
 		var new_position = to_local(get_global_mouse_position())
-		velocity = (pointer_sprite.position - new_position) * (1-velocity_damping) + velocity * (velocity_damping)
+		var damp := pow(velocity_damping, delta * 60.0)
+		velocity = (pointer_sprite.position - new_position) * (1 - damp) + velocity * damp
 		pointer_sprite.rotation = velocity.x * rotation_multiplier.x / 100 + velocity.y * rotation_multiplier.y / 100
 		pointer_sprite.position = new_position
 
