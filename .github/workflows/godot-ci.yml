@@ -45,6 +45,22 @@ jobs:
           cd "$PROJECT_PATH"
           godot --headless --verbose --export-release "Web" "$EXPORT_DIR/web/index.html"
 
+      - name: Stamp commit into exported index.html
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          COMMIT_DATE_ISO="$(git -C "$GITHUB_WORKSPACE" log -1 --format=%cI)"
+          export COMMIT_DATE_ISO
+          node << 'NODE'
+          const fs = require("fs");
+          const path = require("path");
+          const file = path.join(process.env.GITHUB_WORKSPACE, "build", "web", "index.html");
+          let text = fs.readFileSync(file, "utf8");
+          text = text.split("$COMMIT_SHA").join(process.env.COMMIT_SHA);
+          text = text.split("$COMMIT_DATE").join(process.env.COMMIT_DATE_ISO);
+          fs.writeFileSync(file, text);
+          NODE
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
