@@ -4,10 +4,19 @@ extends Ability
 @export var terrain_id: int = 0
 
 @onready var tilemap: TileMapLayer = $"/root/Main/Terrain/TileMapLayer"
-@onready var player: Player = $"../.."
+
 
 var label: String = "🔨"
 var controls_helper_text: String = "Left Click - Place block\nRight Click - Remove block"
+
+
+func on_activate() -> void:
+	if owner_player._is_controlling_locally():
+		Cursor.apply(Cursor.Kind.BUILD)
+
+
+func on_deactivate() -> void:
+	Cursor.reset()
 
 
 func _process(_delta: float) -> void:
@@ -19,7 +28,7 @@ func _process(_delta: float) -> void:
 	if not tilemap:
 		return
 
-	if player and not player._is_controlling_locally():
+	if not owner_player._is_controlling_locally():
 		return
 
 	var mouse_world := tilemap.get_global_mouse_position()

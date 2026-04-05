@@ -18,8 +18,6 @@ var launched: bool = false
 var _target: Vector2 = Vector2.ZERO
 var _hooked_player: Player = null
 
-var hook_cursor = load("res://assets/cursors/Outline/line_cross.svg")
-
 
 func setup(player: Player) -> void:
 	super.setup(player)
@@ -32,21 +30,19 @@ func setup(player: Player) -> void:
 		range_hint.visible = true
 	else:
 		range_hint.visible = false
-	Input.set_custom_mouse_cursor(hook_cursor, Input.CURSOR_CROSS, Vector2(32,32))
 
 
 func on_activate() -> void:
 	retract()
 	ray.enabled = true
-	Input.set_default_cursor_shape(Input.CURSOR_CROSS)
-
+	if owner_player._is_controlling_locally():
+		Cursor.apply(Cursor.Kind.HOOK)
 
 
 func on_deactivate() -> void:
 	retract()
 	ray.enabled = false
-	Input.set_custom_mouse_cursor(null)
-	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	Cursor.reset()
 
 func _process(_delta: float) -> void:
 	line.set_point_position(1, tip.position)
