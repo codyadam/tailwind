@@ -52,11 +52,13 @@ func setup(player: Player) -> void:
 	pointer_sprite.modulate = color
 
 func on_activate() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
+	if owner_player._is_controlling_locally():
+		Input.mouse_mode = Input.MOUSE_MODE_HIDDEN
 	pointer_sprite.visible = true
 
 func on_deactivate() -> void:
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if owner_player._is_controlling_locally():
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	velocity = Vector2.ZERO
 	pointer_sprite.visible = false
 	pointer_sprite.rotation = 0.0
@@ -64,6 +66,8 @@ func on_deactivate() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_active:
+		return
+	if not owner_player._is_controlling_locally():
 		return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
