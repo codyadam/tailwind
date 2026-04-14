@@ -8,7 +8,6 @@ extends Ability
 @onready var line: Line2D = $Line
 @onready var ray: RayCast2D = $RayCast2D
 @onready var max_range: float = ray.target_position.length()
-@onready var range_hint: Sprite2D = $RangeHint
 @onready var target_hint: Sprite2D = $TargetHint
 
 var label: String = "🪝"
@@ -26,10 +25,6 @@ func setup(player: Player) -> void:
 		ray.add_exception(owner_player)
 
 	target_hint.visible = false
-	if owner_player._is_controlling_locally():
-		range_hint.visible = true
-	else:
-		range_hint.visible = false
 
 
 func on_activate() -> void:
