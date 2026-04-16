@@ -21,8 +21,8 @@ Events="*uid://cpsjv2f4rskrm"
 PerformanceSaver="*uid://bod7rbasqmb65"
 SceneSwitcher="*uid://cq1rjfuul3u5x"
 DebugMenu="*uid://cggqb75a8w8r"
-Cursor="*res://scripts/cursor.gd"
-GlobalState="*res://scripts/global_state.gd"
+Cursor="*res://scripts/ui/cursor.gd"
+GlobalState="*res://scripts/core/global_state.gd"
 
 [display]
 

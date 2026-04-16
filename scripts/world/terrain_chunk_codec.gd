@@ -3,6 +3,7 @@ class_name TerrainChunkCodec
 
 const CHUNK_SIZE: int = 16
 const CHUNK_CELLS: int = 256
+const TILE_SIZE_PX: int = 64
 
 const FNV_OFFSET: int = 0x811C9DC5
 const FNV_PRIME: int = 0x01000193

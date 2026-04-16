@@ -1,14 +1,14 @@
 [gd_scene format=3 uid="uid://diparly1twk40"]
 
-[ext_resource type="Script" uid="uid://chuerm6v08iej" path="res://scripts/player.gd" id="1_3vyb7"]
-[ext_resource type="Script" uid="uid://dlhh5d3f6q1iv" path="res://scripts/abilities/build.gd" id="2_g2els"]
-[ext_resource type="Script" uid="uid://c0to42l53xi4t" path="res://scripts/ability_manager.gd" id="2_qlg0r"]
-[ext_resource type="Script" uid="uid://dcgj2fix6qmb5" path="res://scripts/abilities/hook.gd" id="3_qhqgy"]
+[ext_resource type="Script" uid="uid://chuerm6v08iej" path="res://scripts/player/player.gd" id="1_3vyb7"]
+[ext_resource type="Script" uid="uid://dlhh5d3f6q1iv" path="res://scripts/player/abilities/build.gd" id="2_g2els"]
+[ext_resource type="Script" uid="uid://c0to42l53xi4t" path="res://scripts/player/ability_manager.gd" id="2_qlg0r"]
+[ext_resource type="Script" uid="uid://dcgj2fix6qmb5" path="res://scripts/player/abilities/hook.gd" id="3_qhqgy"]
 [ext_resource type="Texture2D" uid="uid://b8o7a0ym4b5c4" path="res://assets/cursors/Outline/target_round_b.svg" id="5_fjrip"]
-[ext_resource type="Script" uid="uid://cnt2uy7udrp4" path="res://scripts/ability_label.gd" id="5_tuyoq"]
-[ext_resource type="Script" uid="uid://eqadfh013inl" path="res://scripts/fluid_actor.gd" id="6_tuyoq"]
-[ext_resource type="Script" uid="uid://xxr7xcs0rb30" path="res://scripts/abilities/pointer.gd" id="6_y4r1p"]
-[ext_resource type="Script" uid="uid://cb0ac75iv2at7" path="res://scripts/proximity_chat.gd" id="7_smehm"]
+[ext_resource type="Script" uid="uid://cnt2uy7udrp4" path="res://scripts/player/ability_label.gd" id="5_tuyoq"]
+[ext_resource type="Script" uid="uid://eqadfh013inl" path="res://scripts/vfx/fluid_actor.gd" id="6_tuyoq"]
+[ext_resource type="Script" uid="uid://xxr7xcs0rb30" path="res://scripts/player/abilities/pointer.gd" id="6_y4r1p"]
+[ext_resource type="Script" uid="uid://cb0ac75iv2at7" path="res://scripts/player/proximity_chat.gd" id="7_smehm"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_gyfs4"]
 radius = 30.0
